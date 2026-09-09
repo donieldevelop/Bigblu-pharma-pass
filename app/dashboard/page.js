@@ -38,8 +38,25 @@ export default function DashboardPage() {
       <p style={{ color: '#666' }}>
         Connecté en tant que <strong>{session?.user?.email}</strong>
       </p>
+      <div style={{ marginTop: 24 }}>
+        <a
+          href="/dashboard/travailleurs"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Travailleurs, abonnements & crédits →
+        </a>
+      </div>
       <p style={{ color: '#999', fontSize: 14, marginTop: 24 }}>
-        Modules à venir : Travailleurs, Pharmacies, Abonnements, Crédits, Transactions, Dettes, Remboursements.
+        Modules à venir : Pharmacies, Transactions, Dettes, Remboursements.
       </p>
     </div>
   );
