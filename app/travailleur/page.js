@@ -80,6 +80,24 @@ export default function TravailleurDashboard() {
           <QrCodeCanvas value={session?.user?.id} size={180} />
         </div>
 
+        <a
+          href="/travailleur/pharmacies"
+          style={{
+            display: 'block',
+            textAlign: 'center',
+            padding: 14,
+            borderRadius: 12,
+            background: 'white',
+            marginBottom: 20,
+            textDecoration: 'none',
+            color: '#12294D',
+            fontWeight: 600,
+            fontSize: 14,
+          }}
+        >
+          🔍 Trouver une pharmacie proche
+        </a>
+
         {/* Historique */}
         <div style={{ background: 'white', borderRadius: 12, padding: 20 }}>
           <p style={{ fontSize: 13, color: '#5B6B82', marginBottom: 12, fontWeight: 600 }}>Mes transactions</p>
