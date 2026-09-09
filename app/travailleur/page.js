@@ -142,11 +142,15 @@ export default function TravailleurDashboard() {
             <p style={{ fontSize: 13, color: '#8393A8' }}>Aucune transaction pour le moment.</p>
           ) : (
             transactions.map((t) => (
-              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #eee', fontSize: 13 }}>
+              <a
+                key={t.id}
+                href={`/travailleur/transactions/${t.id}`}
+                style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #eee', fontSize: 13, textDecoration: 'none', color: '#12294D' }}
+              >
                 <span>{new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
                 <span>{t.montant_total} FCFA</span>
                 <span style={{ color: t.statut === 'validee' ? '#157347' : '#8393A8' }}>{t.statut}</span>
-              </div>
+              </a>
             ))
           )}
         </div>
