@@ -83,9 +83,8 @@ create policy "admin_read_all_abonnements" on public.abonnements
   for select using (public.get_user_role(auth.uid()) = 'super_admin');
 
 -- 5. Créer la ligne profil pour le compte admin créé manuellement AVANT ce trigger
---    ⚠️ Remplace l'e-mail ci-dessous par celui du compte admin créé dans Supabase Auth
 insert into public.utilisateurs (id, role, email, statut, email_verifie)
 select id, 'super_admin', email, 'actif', true
 from auth.users
-where email = 'TON_EMAIL_ADMIN_ICI'
+where id = '990e7349-45b2-420f-9fa8-1adaaa26449d'
 on conflict (id) do update set role = 'super_admin', statut = 'actif', email_verifie = true;
