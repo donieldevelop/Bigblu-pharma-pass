@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabaseClient';
+import QrScanner from '../components/QrScanner';
 
 export default function PharmacieDashboard() {
   const [session, setSession] = useState(null);
@@ -109,8 +110,11 @@ export default function PharmacieDashboard() {
         <div style={{ background: 'white', padding: 20, borderRadius: 8, marginTop: 16 }}>
           <h3 style={{ marginTop: 0 }}>1. Identifier le travailleur</h3>
           <p style={{ fontSize: 12, color: '#888' }}>
-            Colle ici l&apos;identifiant lu depuis le QR Code (en attendant le vrai scanner mobile).
+            Scanne le QR Code du travailleur avec la caméra, ou colle son identifiant manuellement.
           </p>
+          <div style={{ marginBottom: 12 }}>
+            <QrScanner onResult={(valeur) => setTravailleurId(valeur)} />
+          </div>
           <input
             placeholder="UID du travailleur"
             value={travailleurId}
