@@ -120,20 +120,21 @@ export default function Home() {
         .logo { height: 40px; width: auto; }
         .lang { font-weight: 700; color: #123D78; font-size: 14px; }
 
-        .hero { position: relative; padding: 28px 20px 36px; background: linear-gradient(135deg, #ffffff 0%, #f3f8ff 55%, #edf5ff 100%);
-          display: flex; flex-direction: column; gap: 24px;
+        .hero { position: relative; padding: 20px 16px 28px; background: linear-gradient(135deg, #ffffff 0%, #f3f8ff 55%, #edf5ff 100%);
+          display: flex; flex-direction: row; align-items: center; gap: 16px;
           opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .heroVisible { opacity: 1; transform: translateY(0); }
-        .eyebrow { color: #1668C7; font-size: 13px; font-weight: 700; letter-spacing: 0.8px; margin-bottom: 12px; }
-        .titre { font-size: 30px; line-height: 1.1; font-weight: 800; color: #123D78; margin: 0 0 16px; }
+        .heroText { flex: 1.15; min-width: 0; }
+        .eyebrow { color: #1668C7; font-size: 10.5px; font-weight: 700; letter-spacing: 0.6px; margin-bottom: 8px; }
+        .titre { font-size: 22px; line-height: 1.15; font-weight: 800; color: #123D78; margin: 0 0 10px; }
         .accent { color: #4D197E; }
-        .paragraphe { font-size: 15px; line-height: 1.6; color: #5F6F85; margin: 0 0 20px; }
-        .boutons { display: flex; flex-direction: column; gap: 10px; }
-        .btnPrimaire, .btnSecondaire { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 50px; padding: 0 24px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14.5px; }
+        .paragraphe { font-size: 12.5px; line-height: 1.5; color: #5F6F85; margin: 0 0 14px; }
+        .boutons { display: flex; flex-direction: column; gap: 8px; }
+        .btnPrimaire, .btnSecondaire { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 14px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 12px; }
         .btnPrimaire { background: #1668C7; color: white; }
         .btnSecondaire { background: white; color: #123D78; border: 2px solid #1668C7; }
 
-        .heroVisuel { min-height: 220px; border-radius: 24px; background: linear-gradient(135deg, rgba(17,65,120,0.06), rgba(77,25,126,0.09));
+        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 18px; background: linear-gradient(135deg, rgba(17,65,120,0.06), rgba(77,25,126,0.09));
           display: flex; align-items: center; justify-content: center; color: #6C88B0; }
 
         .avantages { background: white; padding: 32px 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -182,12 +183,12 @@ export default function Home() {
         @media (min-width: 800px) {
           .header { padding: 22px 6%; }
           .logo { height: 44px; }
-          .hero { padding: 35px 6% 45px; flex-direction: row; align-items: center; gap: 30px; }
-          .heroText { flex: 1; }
+          .hero { padding: 35px 6% 45px; gap: 30px; }
           .titre { font-size: 56px; }
           .paragraphe { font-size: 18px; max-width: 600px; }
           .boutons { flex-direction: row; }
-          .heroVisuel { flex: 0.8; min-height: 400px; border-radius: 35px; }
+          .btnPrimaire, .btnSecondaire { min-height: 54px; padding: 0 30px; font-size: 17px; }
+          .heroVisuel { min-height: 400px; border-radius: 35px; }
           .avantages { grid-template-columns: repeat(4, 1fr); padding: 45px 6%; max-width: 1100px; margin: 0 auto; }
           .passSection { flex-direction: row; padding: 55px 6%; max-width: 1100px; margin: 0 auto; align-items: center; }
           .passCard, .passDescription { flex: 1; }
