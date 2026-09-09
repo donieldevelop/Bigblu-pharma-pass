@@ -71,7 +71,7 @@ export default function Home() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 40 }}>
-            <span style={{ fontSize: 12, letterSpacing: 0.6, opacity: 0.75 }}>PHARMA PASS</span>
+            <span style={{ fontSize: 12, letterSpacing: 0.6, opacity: 0.75 }}>BIGBLU PHARMA PASS</span>
             <div style={{ width: 32, height: 24, borderRadius: 4, background: '#D98E3B' }} />
           </div>
           <div style={{ fontSize: 13, opacity: 0.7, marginBottom: 4 }}>Plafond mensuel</div>
