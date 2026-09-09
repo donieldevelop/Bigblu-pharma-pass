@@ -7,6 +7,13 @@ import QrScanner from '../components/QrScanner';
 
 export default function PharmacieDashboard() {
   const [session, setSession] = useState(null);
+  const [pharmacie, setPharmacie] = useState(null);
+  const [chargementPharmacie, setChargementPharmacie] = useState(true);
+  const [formNom, setFormNom] = useState('');
+  const [formAdresse, setFormAdresse] = useState('');
+  const [formLat, setFormLat] = useState('');
+  const [formLng, setFormLng] = useState('');
+  const [inscriptionEnCours, setInscriptionEnCours] = useState(false);
   const [travailleurId, setTravailleurId] = useState('');
   const [infoTravailleur, setInfoTravailleur] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
@@ -23,11 +30,40 @@ export default function PharmacieDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) router.push('/pharmacie/login');
-      else setSession(data.session);
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!data.session) return router.push('/pharmacie/login');
+      setSession(data.session);
+      const { data: p } = await supabase.from('pharmacies').select('*').eq('user_id', data.session.user.id).maybeSingle();
+      setPharmacie(p);
+      setChargementPharmacie(false);
     });
   }, [router]);
+
+  function utiliserPosition() {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setFormLat(pos.coords.latitude.toString());
+        setFormLng(pos.coords.longitude.toString());
+      },
+      () => setError('Impossible de récupérer ta position, saisis-la manuellement.')
+    );
+  }
+
+  async function inscrirePharmacie(e) {
+    e.preventDefault();
+    setInscriptionEnCours(true);
+    setError('');
+    const { error } = await supabase.rpc('pharmacie_inscrire', {
+      p_nom: formNom,
+      p_adresse: formAdresse,
+      p_latitude: parseFloat(formLat),
+      p_longitude: parseFloat(formLng),
+    });
+    setInscriptionEnCours(false);
+    if (error) return setError(error.message);
+    const { data: p } = await supabase.from('pharmacies').select('*').eq('user_id', session.user.id).maybeSingle();
+    setPharmacie(p);
+  }
 
   async function identifier() {
     setError('');
@@ -135,7 +171,46 @@ export default function PharmacieDashboard() {
     router.push('/pharmacie/login');
   }
 
-  if (!session) return null;
+  if (!session || chargementPharmacie) return null;
+
+  if (!pharmacie) {
+    return (
+      <div style={{ padding: 32, maxWidth: 420, margin: '0 auto' }}>
+        <h1 style={{ fontSize: 20 }}>Inscrire ma pharmacie</h1>
+        <p style={{ fontSize: 13, color: '#888' }}>
+          Renseigne les informations de ta pharmacie. Un administrateur devra valider ta fiche
+          avant que tu puisses effectuer des transactions.
+        </p>
+        <form onSubmit={inscrirePharmacie} style={{ display: 'grid', gap: 10, marginTop: 16 }}>
+          <input placeholder="Nom de la pharmacie" value={formNom} onChange={(e) => setFormNom(e.target.value)} required style={{ padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
+          <input placeholder="Adresse" value={formAdresse} onChange={(e) => setFormAdresse(e.target.value)} required style={{ padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
+          <button type="button" onClick={utiliserPosition} style={{ padding: 10, borderRadius: 6, border: '1px dashed #999', background: 'white', cursor: 'pointer', fontSize: 13 }}>
+            📍 Utiliser ma position actuelle
+          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input placeholder="Latitude" value={formLat} onChange={(e) => setFormLat(e.target.value)} required style={{ flex: 1, padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
+            <input placeholder="Longitude" value={formLng} onChange={(e) => setFormLng(e.target.value)} required style={{ flex: 1, padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
+          </div>
+          {error && <p style={{ color: '#c0392b', fontSize: 13 }}>{error}</p>}
+          <button type="submit" disabled={inscriptionEnCours} style={btnStyle}>
+            {inscriptionEnCours ? 'Envoi...' : 'Soumettre pour validation'}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  if (pharmacie.statut !== 'active') {
+    return (
+      <div style={{ padding: 32, maxWidth: 420, margin: '80px auto', textAlign: 'center' }}>
+        <h2>Fiche en attente de validation</h2>
+        <p style={{ color: '#888' }}>
+          La fiche de <strong>{pharmacie.nom}</strong> a été soumise et attend la validation de
+          l&apos;administration. Reviens un peu plus tard.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: 32, maxWidth: 560, margin: '0 auto' }}>

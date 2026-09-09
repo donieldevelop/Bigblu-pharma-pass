@@ -60,6 +60,19 @@ export default function PharmaciesPage() {
     load();
   }
 
+  async function validerPharmacie(id) {
+    const { error } = await supabase.from('pharmacies').update({ statut: 'active' }).eq('id', id);
+    if (error) return setError(error.message);
+    load();
+  }
+
+  async function refuserPharmacie(id) {
+    if (!confirm('Supprimer définitivement cette demande ?')) return;
+    const { error } = await supabase.from('pharmacies').delete().eq('id', id);
+    if (error) return setError(error.message);
+    load();
+  }
+
   async function lierCompte(pharmacieId) {
     setError('');
     const email = emailsLiaison[pharmacieId];
@@ -110,34 +123,60 @@ export default function PharmaciesPage() {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
-          {pharmacies.map((p) => (
-            <div key={p.id} style={{ background: 'white', padding: 16, borderRadius: 8, textAlign: 'center' }}>
-              <strong>{p.nom}</strong>
-              <p style={{ fontSize: 12, color: '#888', margin: '4px 0 12px' }}>{p.adresse}</p>
-              <QrCodeCanvas value={p.qr_code_id} size={140} />
-              <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>{p.statut}</p>
-              {p.user_id ? (
-                <p style={{ fontSize: 11, color: '#0e7c3f', marginTop: 4 }}>Compte pharmacien lié ✓</p>
-              ) : (
-                <div style={{ marginTop: 8, display: 'flex', gap: 4 }}>
-                  <input
-                    placeholder="e-mail du pharmacien"
-                    value={emailsLiaison[p.id] || ''}
-                    onChange={(e) => setEmailsLiaison({ ...emailsLiaison, [p.id]: e.target.value })}
-                    style={{ flex: 1, padding: 6, fontSize: 12, borderRadius: 6, border: '1px solid #ddd' }}
-                  />
-                  <button
-                    onClick={() => lierCompte(p.id)}
-                    style={{ padding: '6px 10px', fontSize: 12, borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}
-                  >
-                    Lier
-                  </button>
-                </div>
-              )}
+        <>
+          {pharmacies.some((p) => p.statut === 'en_attente') && (
+            <div style={{ marginBottom: 28 }}>
+              <h3 style={{ fontSize: 15, marginBottom: 10 }}>Demandes en attente de validation</h3>
+              <div style={{ display: 'grid', gap: 10 }}>
+                {pharmacies.filter((p) => p.statut === 'en_attente').map((p) => (
+                  <div key={p.id} style={{ background: '#FFF7EA', border: '1px solid #F0D9A6', borderRadius: 8, padding: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <strong>{p.nom}</strong>
+                      <p style={{ fontSize: 12, color: '#888', margin: 0 }}>{p.adresse}</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button onClick={() => validerPharmacie(p.id)} style={{ padding: '6px 14px', borderRadius: 6, border: 'none', background: '#0e7c3f', color: 'white', cursor: 'pointer', fontSize: 13 }}>
+                        Valider
+                      </button>
+                      <button onClick={() => refuserPharmacie(p.id)} style={{ padding: '6px 14px', borderRadius: 6, border: '1px solid #c0392b', background: 'white', color: '#c0392b', cursor: 'pointer', fontSize: 13 }}>
+                        Refuser
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
+          )}
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+            {pharmacies.filter((p) => p.statut !== 'en_attente').map((p) => (
+              <div key={p.id} style={{ background: 'white', padding: 16, borderRadius: 8, textAlign: 'center' }}>
+                <strong>{p.nom}</strong>
+                <p style={{ fontSize: 12, color: '#888', margin: '4px 0 12px' }}>{p.adresse}</p>
+                <QrCodeCanvas value={p.qr_code_id} size={140} />
+                <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>{p.statut}</p>
+                {p.user_id ? (
+                  <p style={{ fontSize: 11, color: '#0e7c3f', marginTop: 4 }}>Compte pharmacien lié ✓</p>
+                ) : (
+                  <div style={{ marginTop: 8, display: 'flex', gap: 4 }}>
+                    <input
+                      placeholder="e-mail du pharmacien"
+                      value={emailsLiaison[p.id] || ''}
+                      onChange={(e) => setEmailsLiaison({ ...emailsLiaison, [p.id]: e.target.value })}
+                      style={{ flex: 1, padding: 6, fontSize: 12, borderRadius: 6, border: '1px solid #ddd' }}
+                    />
+                    <button
+                      onClick={() => lierCompte(p.id)}
+                      style={{ padding: '6px 10px', fontSize: 12, borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}
+                    >
+                      Lier
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

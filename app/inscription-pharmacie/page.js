@@ -35,8 +35,8 @@ export default function InscriptionPharmaciePage() {
       <div style={{ padding: 32, maxWidth: 480, margin: '0 auto' }}>
         <h2>Compte créé</h2>
         <p>
-          Transmets cet e-mail (<strong>{email}</strong>) à l&apos;administration pour qu&apos;elle relie ton
-          compte à ta fiche pharmacie.
+          Connecte-toi maintenant pour renseigner les informations de ta pharmacie — un
+          administrateur devra ensuite valider ta fiche avant que tu puisses effectuer des transactions.
         </p>
         <a href="/pharmacie/login">Aller à la connexion pharmacie →</a>
       </div>
