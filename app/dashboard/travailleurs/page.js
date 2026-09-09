@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabaseClient';
+import QrCodeCanvas from '../../components/QrCodeCanvas';
 
 export default function TravailleursPage() {
   const [rows, setRows] = useState([]);
@@ -66,6 +67,7 @@ export default function TravailleursPage() {
               <th style={{ padding: 10 }}>Abonnement</th>
               <th style={{ padding: 10 }}>Crédit dispo.</th>
               <th style={{ padding: 10 }}>Dette</th>
+              <th style={{ padding: 10 }}>QR Code</th>
               <th style={{ padding: 10 }}></th>
             </tr>
           </thead>
@@ -78,6 +80,9 @@ export default function TravailleursPage() {
                 <td style={{ padding: 10 }}>{r.statut_abonnement || 'aucun'}</td>
                 <td style={{ padding: 10 }}>{r.montant_disponible != null ? `${r.montant_disponible} FCFA` : '—'}</td>
                 <td style={{ padding: 10 }}>{r.montant_du != null ? `${r.montant_du} FCFA` : '—'}</td>
+                <td style={{ padding: 10 }}>
+                  <QrCodeCanvas value={r.id} size={60} />
+                </td>
                 <td style={{ padding: 10 }}>
                   {r.statut_abonnement !== 'actif' && (
                     <button

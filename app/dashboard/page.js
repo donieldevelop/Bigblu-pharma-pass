@@ -38,7 +38,7 @@ export default function DashboardPage() {
       <p style={{ color: '#666' }}>
         Connecté en tant que <strong>{session?.user?.email}</strong>
       </p>
-      <div style={{ marginTop: 24 }}>
+      <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
         <a
           href="/dashboard/travailleurs"
           style={{
@@ -54,9 +54,24 @@ export default function DashboardPage() {
         >
           Travailleurs, abonnements & crédits →
         </a>
+        <a
+          href="/dashboard/pharmacies"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Pharmacies partenaires →
+        </a>
       </div>
       <p style={{ color: '#999', fontSize: 14, marginTop: 24 }}>
-        Modules à venir : Pharmacies, Transactions, Dettes, Remboursements.
+        Modules à venir : Transactions, Dettes, Remboursements.
       </p>
     </div>
   );
