@@ -86,7 +86,8 @@ export default function Home() {
             titre="Travailleur"
             texte="Ton crédit disponible, ton QR Code, tes reçus et l'historique de tes médicaments, directement depuis ton téléphone."
             accent="#12294D"
-            badge="Bientôt sur mobile"
+            lien="/travailleur/login"
+            lienTexte="Accéder à mon espace"
           />
           <EspaceCard
             titre="Pharmacie partenaire"

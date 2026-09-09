@@ -1,0 +1,13 @@
+{
+  "name": "BIG BLU PHARMA PASS",
+  "short_name": "Pharma Pass",
+  "description": "Plateforme d'accès des travailleurs aux médicaments via un réseau de pharmacies partenaires.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EEF2F6",
+  "theme_color": "#12294D",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
