@@ -17,6 +17,8 @@ export default function PharmacieDashboard() {
   const [quantite, setQuantite] = useState(1);
   const [prix, setPrix] = useState('');
   const [resultatValidation, setResultatValidation] = useState(null);
+  const [photoEnAnalyse, setPhotoEnAnalyse] = useState(false);
+  const [suggestionsIA, setSuggestionsIA] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -44,6 +46,44 @@ export default function PharmacieDashboard() {
     if (error) return setError(error.message);
     setTransactionId(data);
     setMedicaments([]);
+  }
+
+  async function analyserPhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setPhotoEnAnalyse(true);
+    setError('');
+    setSuggestionsIA([]);
+
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    try {
+      const res = await fetch('/api/analyser-medicament', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_base64: base64 }),
+      });
+      const data = await res.json();
+      if (data.erreur) {
+        setError(data.erreur);
+      } else {
+        setSuggestionsIA(data.medicaments || []);
+      }
+    } catch (err) {
+      setError("Erreur d'analyse : " + err.message);
+    }
+    setPhotoEnAnalyse(false);
+  }
+
+  function utiliserSuggestion(s) {
+    setNom(s.nom || '');
+    setQuantite(s.quantite || 1);
+    setPrix(s.prix_unitaire || '');
   }
 
   async function ajouterMedicament() {
@@ -137,6 +177,28 @@ export default function PharmacieDashboard() {
       {transactionId && !resultatValidation && (
         <div style={{ background: 'white', padding: 20, borderRadius: 8, marginTop: 16 }}>
           <h3 style={{ marginTop: 0 }}>2. Ajouter les médicaments</h3>
+
+          <label style={{ display: 'inline-block', marginBottom: 12, padding: '8px 14px', borderRadius: 6, border: '1px dashed #999', fontSize: 13, cursor: 'pointer' }}>
+            📷 Prendre une photo (lecture automatique)
+            <input type="file" accept="image/*" capture="environment" onChange={analyserPhoto} style={{ display: 'none' }} />
+          </label>
+
+          {photoEnAnalyse && <p style={{ fontSize: 13, color: '#888' }}>Analyse de la photo en cours...</p>}
+
+          {suggestionsIA.length > 0 && (
+            <div style={{ background: '#f5f6f8', padding: 10, borderRadius: 6, marginBottom: 12 }}>
+              <p style={{ fontSize: 12, margin: '0 0 8px' }}>Détecté par l&apos;IA (vérifie avant d&apos;ajouter) :</p>
+              {suggestionsIA.map((s, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, padding: '4px 0' }}>
+                  <span>{s.nom || '?'} — {s.quantite ?? '?'} × {s.prix_unitaire ?? '?'} FCFA</span>
+                  <button onClick={() => utiliserSuggestion(s)} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}>
+                    Utiliser
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
             <input placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)} style={{ flex: 2, padding: 8, borderRadius: 6, border: '1px solid #ddd' }} />
             <input type="number" placeholder="Qté" value={quantite} onChange={(e) => setQuantite(e.target.value)} style={{ flex: 1, padding: 8, borderRadius: 6, border: '1px solid #ddd' }} />

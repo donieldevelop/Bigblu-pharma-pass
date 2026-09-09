@@ -135,6 +135,24 @@ export default function TravailleurDashboard() {
           </a>
         </div>
 
+        <a
+          href="/travailleur/assistant"
+          style={{
+            display: 'block',
+            textAlign: 'center',
+            padding: 14,
+            borderRadius: 12,
+            background: '#12294D',
+            marginBottom: 20,
+            textDecoration: 'none',
+            color: 'white',
+            fontWeight: 600,
+            fontSize: 14,
+          }}
+        >
+          💬 Assistant
+        </a>
+
         {/* Historique */}
         <div style={{ background: 'white', borderRadius: 12, padding: 20 }}>
           <p style={{ fontSize: 13, color: '#5B6B82', marginBottom: 12, fontWeight: 600 }}>Mes transactions</p>
