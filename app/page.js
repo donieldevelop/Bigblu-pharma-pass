@@ -1,7 +1,18 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 export default function Home() {
+  const [visible, setVisible] = useState(false);
+  const [hover, setHover] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <div style={{ background: '#EEF2F6', minHeight: '100vh', color: '#12294D' }}>
-      {/* Barre supérieure */}
+    <div style={{ background: '#EEF2F6', minHeight: '100vh', color: '#12294D', overflow: 'hidden' }}>
       <header
         style={{
           display: 'flex',
@@ -16,70 +27,34 @@ export default function Home() {
         <span style={{ fontSize: 13, color: '#5B6B82' }}>Un service BIG HOLDING SA</span>
       </header>
 
-      {/* Hero */}
       <section
         style={{
           maxWidth: 1100,
           margin: '0 auto',
-          padding: '48px 48px 80px',
+          padding: '40px 48px 72px',
           display: 'grid',
           gridTemplateColumns: '1.1fr 0.9fr',
           gap: 56,
           alignItems: 'center',
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(14px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease',
         }}
       >
         <div>
-          <h1
-            style={{
-              fontSize: 46,
-              lineHeight: 1.12,
-              fontWeight: 800,
-              margin: '0 0 20px',
-              maxWidth: 480,
-            }}
-          >
+          <h1 style={{ fontSize: 44, lineHeight: 1.12, fontWeight: 800, margin: '0 0 20px', maxWidth: 480 }}>
             Le crédit médicament de vos travailleurs, réglé en pharmacie.
           </h1>
-          <p style={{ fontSize: 17, color: '#3E4C63', maxWidth: 460, lineHeight: 1.6, margin: '0 0 32px' }}>
+          <p style={{ fontSize: 17, color: '#3E4C63', maxWidth: 460, lineHeight: 1.6, margin: '0 0 12px' }}>
             Chaque travailleur abonné dispose d&apos;un plafond mensuel qu&apos;il utilise directement
-            chez une pharmacie partenaire, identifié par son QR Code. Aucune avance de fonds,
-            aucune paperasse : la pharmacie délivre, la plateforme suit tout.
+            chez une pharmacie partenaire, identifié par son QR Code personnel.
           </p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <a
-              href="/login"
-              style={{
-                padding: '13px 26px',
-                borderRadius: 6,
-                background: '#12294D',
-                color: 'white',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: 14,
-              }}
-            >
-              Administration
-            </a>
-            <a
-              href="/pharmacie/login"
-              style={{
-                padding: '13px 26px',
-                borderRadius: 6,
-                background: 'transparent',
-                border: '1px solid #B9C4D3',
-                color: '#12294D',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: 14,
-              }}
-            >
-              Espace Pharmacie
-            </a>
-          </div>
+          <p style={{ fontSize: 14, color: '#5B6B82' }}>Réseau de pharmacies partenaires en expansion.</p>
         </div>
 
-        {/* Visuel : le "pass" lui-même */}
         <div
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
           style={{
             background: 'linear-gradient(135deg, #12294D 0%, #1F4478 100%)',
             borderRadius: 16,
@@ -87,7 +62,9 @@ export default function Home() {
             color: 'white',
             maxWidth: 360,
             marginLeft: 'auto',
-            boxShadow: '0 20px 40px -12px rgba(18,41,77,0.35)',
+            boxShadow: hover ? '0 28px 50px -14px rgba(18,41,77,0.45)' : '0 20px 40px -12px rgba(18,41,77,0.35)',
+            transform: hover ? 'translateY(-4px) rotate(-0.5deg)' : 'translateY(0) rotate(0)',
+            transition: 'transform 0.25s ease, box-shadow 0.25s ease',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 40 }}>
@@ -103,26 +80,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Les trois espaces */}
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: '0 48px 96px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: '#D7DFE8' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 1, background: '#D7DFE8' }}>
           <EspaceCard
             titre="Travailleur"
-            texte="Consulte ton crédit disponible, ton QR Code, tes reçus et l'historique de tes médicaments récupérés."
+            texte="Ton crédit disponible, ton QR Code, tes reçus et l'historique de tes médicaments, directement depuis ton téléphone."
             accent="#12294D"
+            badge="Bientôt sur mobile"
           />
           <EspaceCard
             titre="Pharmacie partenaire"
             texte="Identifie le travailleur, enregistre les médicaments délivrés et valide la transaction en quelques secondes."
             accent="#D98E3B"
             lien="/pharmacie/login"
-            lienTexte="Se connecter"
-          />
-          <EspaceCard
-            titre="Administration"
-            texte="Pilote les travailleurs, les pharmacies, les abonnements, les crédits et le recouvrement."
-            accent="#157347"
-            lien="/login"
             lienTexte="Se connecter"
           />
         </div>
@@ -135,15 +105,20 @@ export default function Home() {
   );
 }
 
-function EspaceCard({ titre, texte, accent, lien, lienTexte }) {
+function EspaceCard({ titre, texte, accent, lien, lienTexte, badge }) {
   return (
     <div style={{ background: '#EEF2F6', padding: '28px 26px', borderLeft: `3px solid ${accent}` }}>
       <h3 style={{ fontSize: 16, margin: '0 0 10px' }}>{titre}</h3>
-      <p style={{ fontSize: 13.5, color: '#3E4C63', lineHeight: 1.55, margin: lien ? '0 0 16px' : 0 }}>{texte}</p>
+      <p style={{ fontSize: 13.5, color: '#3E4C63', lineHeight: 1.55, margin: '0 0 16px' }}>{texte}</p>
       {lien && (
         <a href={lien} style={{ fontSize: 13, fontWeight: 600, color: accent, textDecoration: 'none' }}>
           {lienTexte} →
         </a>
+      )}
+      {badge && (
+        <span style={{ fontSize: 12, fontWeight: 600, color: accent, border: `1px solid ${accent}55`, padding: '4px 10px', borderRadius: 20 }}>
+          {badge}
+        </span>
       )}
     </div>
   );
