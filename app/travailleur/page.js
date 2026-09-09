@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabaseClient';
 import BottomNav from '../components/BottomNav';
+import { Bell, QrCode, ScanLine, Pill, Receipt, Clock, HeartPulse, Building2, ChevronRight, Eye, Plus, Minus, Wallet } from 'lucide-react';
 
 export default function TravailleurDashboard() {
   const [profil, setProfil] = useState(null);
   const [credit, setCredit] = useState(null);
   const [abonnement, setAbonnement] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const [notifNonLues, setNotifNonLues] = useState(0);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -19,16 +21,18 @@ export default function TravailleurDashboard() {
       if (!s.session) return router.push('/travailleur/login');
       const uid = s.session.user.id;
 
-      const [{ data: u }, { data: c }, { data: a }, { count: n }] = await Promise.all([
+      const [{ data: u }, { data: c }, { data: a }, { data: t }, { count: n }] = await Promise.all([
         supabase.from('utilisateurs').select('*').eq('id', uid).single(),
         supabase.from('credits').select('*').eq('travailleur_id', uid).maybeSingle(),
         supabase.from('abonnements').select('*').eq('travailleur_id', uid).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+        supabase.from('transactions').select('id, montant_total, statut, created_at, pharmacies(nom)').eq('travailleur_id', uid).order('created_at', { ascending: false }).limit(3),
         supabase.from('notifications').select('id', { count: 'exact', head: true }).eq('destinataire_id', uid).eq('lu', false),
       ]);
 
       setProfil(u);
       setCredit(c);
       setAbonnement(a);
+      setTransactions(t || []);
       setNotifNonLues(n || 0);
       setLoading(false);
     })();
@@ -40,264 +44,175 @@ export default function TravailleurDashboard() {
   const initiale = (profil?.prenom || profil?.email || '?').charAt(0).toUpperCase();
 
   const actions = [
-    { icone: '📱', label: 'Mon QR Code', href: '/travailleur/qrcode' },
-    { icone: '💊', label: 'Pharmacies partenaires', href: '/travailleur/pharmacies' },
-    { icone: '🧾', label: 'Mes achats', href: '/travailleur/historique' },
-    { icone: '📋', label: 'Historique médicaments', href: '/travailleur/historique' },
+    { Icon: Pill, label: 'Pharmacies partenaires', href: '/travailleur/pharmacies', color: '#12294D' },
+    { Icon: Receipt, label: 'Mes achats', href: '/travailleur/historique', color: '#0E7C3F' },
+    { Icon: Clock, label: 'Historique médicaments', href: '/travailleur/historique', color: '#C0562A' },
+    { Icon: HeartPulse, label: 'Conseils santé', href: '/travailleur/conseils', color: '#B8324D' },
   ];
 
   return (
     <div className="screen">
       <div className="content">
         <header className="topBar">
-          <img src="/logo.png" alt="BIG BLU" className="logo" />
+          <div className="brand">
+            <img src="/logo.png" alt="BIG BLU" className="logo" />
+            <div>
+              <div className="brandTitle">BIG BLU PHARMA PASS</div>
+              <div className="brandSub">Votre santé, notre priorité</div>
+            </div>
+          </div>
           <div className="topBarRight">
             <a href="/travailleur/notifications" className="bellWrap">
-              🔔
+              <Bell size={20} />
               {notifNonLues > 0 && <span className="dot" />}
             </a>
-            <div className="avatar">{initiale}</div>
+            <div className="avatarBlock">
+              <div className="avatar">{initiale}</div>
+            </div>
           </div>
         </header>
 
-        <p className="greeting">Bonjour {profil?.prenom || ''},</p>
-        <h1 className="titre">Prenez soin de votre santé en toute sérénité</h1>
-        <div className="barre" />
-        <p className="sous">Votre crédit médicament, réglé en pharmacie.</p>
-
-        <div className="features">
-          <span>✅ Simple et sécurisé</span>
-          <span>🤝 Réseau de pharmacies partenaires</span>
-          <span>👥 Pour tous les travailleurs</span>
-        </div>
+        <p className="greeting">Bonjour, <strong>{profil?.prenom} {profil?.nom}</strong></p>
+        <p className="role">Travailleur</p>
 
         <div className="passCard">
           <div className="passCardTop">
-            <span className="passCardLabel">BIGBLU PHARMA PASS</span>
-            <div className="passCardChip" />
+            <span className="passCardLabel">Mon crédit médicament</span>
+            <img src="/logo.png" alt="" className="passCardWatermark" />
           </div>
-          <div className="passCardCaption">Crédit disponible</div>
           <div className="passCardAmount">{credit ? `${disponible} FCFA` : '—'}</div>
-          <div className="passCardFooter">
-            <span>Plafond {credit?.plafond ?? 0} FCFA</span>
-            <span>Abonnement : {abonnement?.statut || 'non activé'}</span>
+          <div className="passCardValidite">
+            {abonnement?.date_expiration
+              ? `Valide jusqu'au ${new Date(abonnement.date_expiration).toLocaleDateString('fr-FR')}`
+              : 'Abonnement non activé'}
           </div>
-          <img src="/logo.png" alt="" className="passCardWatermark" />
+          <a href="/travailleur/credit" className="passCardBtn">
+            <Eye size={15} /> Voir les détails
+          </a>
+        </div>
+
+        <div className="qrActions">
+          <a href="/travailleur/qrcode" className="qrAction qrActionBlue">
+            <QrCode size={22} />
+            <div>
+              <strong>Afficher mon QR Code</strong>
+              <span>Présentez ce code en pharmacie</span>
+            </div>
+            <ChevronRight size={18} className="qrChevron" />
+          </a>
+          <a href="/travailleur/scanner" className="qrAction qrActionPurple">
+            <ScanLine size={22} />
+            <div>
+              <strong>Scanner un QR Code</strong>
+              <span>Scannez le QR d&apos;une pharmacie</span>
+            </div>
+            <ChevronRight size={18} className="qrChevron" />
+          </a>
         </div>
 
         <div className="actionsGrid">
           {actions.map((a) => (
             <a key={a.label} href={a.href} className="actionCard">
-              <span className="actionIcon">{a.icone}</span>
+              <div className="actionIconWrap" style={{ background: `${a.color}18`, color: a.color }}>
+                <a.Icon size={22} />
+              </div>
               <span className="actionLabel">{a.label}</span>
             </a>
           ))}
         </div>
 
         <a href="/travailleur/pharmacies" className="bandeau">
-          <span className="bandeauIcon">🏥</span>
+          <div className="bandeauIcon">
+            <Building2 size={28} />
+          </div>
           <span className="bandeauTexte">
-            <strong>Réseau de pharmacies partenaires en expansion.</strong>
-            <span>Trouvez une pharmacie près de vous.</span>
+            <strong>Trouvez une pharmacie partenaire près de vous</strong>
+            <span>Accédez à la carte et aux horaires de nos pharmacies partenaires.</span>
           </span>
-          <span className="bandeauFleche">›</span>
+          <ChevronRight size={20} />
         </a>
 
-        <a href="/travailleur/qrcode" className="bandeau">
-          <span className="bandeauIcon">📷</span>
-          <span className="bandeauTexte">
-            <strong>Utilisez votre QR Code</strong>
-            <span>Présentez votre QR Code en pharmacie pour régler avec votre crédit.</span>
-          </span>
-          <span className="bandeauFleche">›</span>
-        </a>
+        <div className="transHeader">
+          <h3>Dernières transactions</h3>
+          <a href="/travailleur/historique">Voir tout <ChevronRight size={14} /></a>
+        </div>
+
+        {transactions.length === 0 ? (
+          <p className="vide">Aucune transaction pour le moment.</p>
+        ) : (
+          <div className="transList">
+            {transactions.map((t) => (
+              <a key={t.id} href={`/travailleur/transactions/${t.id}`} className="transItem">
+                <div className={`transIcon ${t.statut === 'validee' ? 'transIconOk' : 'transIconAttente'}`}>
+                  <Plus size={16} />
+                </div>
+                <div className="transInfo">
+                  <strong>Achat médicaments</strong>
+                  <span>{t.pharmacies?.nom || '—'} · {new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
+                </div>
+                <span className="transMontant">- {t.montant_total} FCFA</span>
+                <ChevronRight size={16} color="#B9C4D3" />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
       <BottomNav actif="accueil" />
 
       <style jsx>{`
-        .screen {
-          background: #eef2f6;
-          min-height: 100vh;
-          color: #12294d;
-        }
-        .content {
-          max-width: 480px;
-          margin: 0 auto;
-          padding: 20px 20px 100px;
-        }
-        .topBar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-        .logo {
-          height: 40px;
-          width: auto;
-        }
-        .topBarRight {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-        }
-        .bellWrap {
-          position: relative;
-          font-size: 20px;
-          text-decoration: none;
-        }
-        .dot {
-          position: absolute;
-          top: -2px;
-          right: -2px;
-          width: 8px;
-          height: 8px;
-          background: #d63b3b;
-          border-radius: 50%;
-        }
-        .avatar {
-          width: 38px;
-          height: 38px;
-          border-radius: 50%;
-          background: #12294d;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 700;
-          font-size: 14px;
-        }
-        .greeting {
-          font-size: 15px;
-          color: #5b6b82;
-          margin: 0 0 4px;
-        }
-        .titre {
-          font-size: 26px;
-          font-weight: 800;
-          line-height: 1.2;
-          margin: 0 0 10px;
-        }
-        .barre {
-          width: 40px;
-          height: 3px;
-          background: #12294d;
-          margin-bottom: 16px;
-        }
-        .sous {
-          font-size: 14px;
-          color: #5b6b82;
-          margin: 0 0 20px;
-        }
-        .features {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 14px;
-          font-size: 12px;
-          color: #3e4c63;
-          margin-bottom: 24px;
-        }
-        .passCard {
-          position: relative;
-          background: linear-gradient(135deg, #12294d 0%, #1f4478 100%);
-          border-radius: 16px;
-          padding: 22px;
-          color: white;
-          overflow: hidden;
-          margin-bottom: 20px;
-        }
-        .passCardWatermark {
-          position: absolute;
-          right: -20px;
-          bottom: -20px;
-          width: 120px;
-          opacity: 0.15;
-        }
-        .passCardTop {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 32px;
-        }
-        .passCardLabel {
-          font-size: 11px;
-          letter-spacing: 0.6px;
-          opacity: 0.85;
-        }
-        .passCardChip {
-          width: 28px;
-          height: 21px;
-          border-radius: 4px;
-          background: #d98e3b;
-        }
-        .passCardCaption {
-          font-size: 12px;
-          opacity: 0.75;
-          margin-bottom: 4px;
-        }
-        .passCardAmount {
-          font-size: 28px;
-          font-weight: 700;
-          margin-bottom: 20px;
-        }
-        .passCardFooter {
-          display: flex;
-          justify-content: space-between;
-          font-size: 11px;
-          opacity: 0.8;
-          position: relative;
-          z-index: 1;
-        }
-        .actionsGrid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 12px;
-          margin-bottom: 20px;
-        }
-        .actionCard {
-          background: white;
-          border-radius: 14px;
-          padding: 18px 10px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-          text-decoration: none;
-          color: #12294d;
-          text-align: center;
-        }
-        .actionIcon {
-          font-size: 22px;
-        }
-        .actionLabel {
-          font-size: 12.5px;
-          font-weight: 600;
-        }
-        .bandeau {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          background: #dce7f7;
-          border-radius: 14px;
-          padding: 16px;
-          text-decoration: none;
-          color: #12294d;
-          margin-bottom: 12px;
-        }
-        .bandeauIcon {
-          font-size: 26px;
-        }
-        .bandeauTexte {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          font-size: 13px;
-        }
-        .bandeauFleche {
-          font-size: 22px;
-          color: #12294d;
-        }
+        .screen { background: #EEF2F6; min-height: 100vh; color: #12294D; }
+        .content { max-width: 480px; margin: 0 auto; padding: 20px 20px 100px; }
+        .topBar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .logo { height: 38px; width: auto; }
+        .brandTitle { font-size: 13px; font-weight: 800; letter-spacing: 0.2px; }
+        .brandSub { font-size: 11px; color: #5B6B82; }
+        .topBarRight { display: flex; align-items: center; gap: 14px; }
+        .bellWrap { position: relative; color: #12294D; }
+        .dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: #D63B3B; border-radius: 50%; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; background: #12294D; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+        .greeting { font-size: 15px; margin: 0; }
+        .role { font-size: 12px; color: #8393A8; margin: 0 0 18px; }
+
+        .passCard { position: relative; background: linear-gradient(135deg, #12294D 0%, #1F4478 100%); border-radius: 16px; padding: 22px; color: white; overflow: hidden; margin-bottom: 16px; }
+        .passCardWatermark { position: absolute; right: -10px; top: -10px; width: 90px; opacity: 0.15; }
+        .passCardLabel { font-size: 12px; opacity: 0.85; }
+        .passCardAmount { font-size: 30px; font-weight: 800; margin: 6px 0 4px; }
+        .passCardValidite { font-size: 12px; opacity: 0.75; margin-bottom: 16px; }
+        .passCardBtn { display: inline-flex; align-items: center; gap: 6px; background: white; color: #12294D; font-size: 12.5px; font-weight: 700; padding: 8px 14px; border-radius: 8px; text-decoration: none; }
+
+        .qrActions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .qrAction { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; text-decoration: none; position: relative; }
+        .qrAction strong { display: block; font-size: 13px; color: #12294D; }
+        .qrAction span { display: block; font-size: 11px; color: #5B6B82; margin-top: 2px; }
+        .qrActionBlue { background: #DCE7F7; color: #12294D; }
+        .qrActionPurple { background: #EDE7F9; color: #5B3FA0; }
+        .qrChevron { position: absolute; top: 14px; right: 12px; color: inherit; opacity: 0.6; }
+
+        .actionsGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+        .actionCard { display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; text-align: center; }
+        .actionIconWrap { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .actionLabel { font-size: 11px; color: #12294D; font-weight: 600; line-height: 1.2; }
+
+        .bandeau { display: flex; align-items: center; gap: 14px; background: #DCE7F7; border-radius: 14px; padding: 16px; text-decoration: none; color: #12294D; margin-bottom: 20px; }
+        .bandeauIcon { color: #12294D; flex-shrink: 0; }
+        .bandeauTexte { flex: 1; display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; }
+        .bandeauTexte span { color: #3E4C63; font-weight: 400; }
+
+        .transHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .transHeader h3 { font-size: 15px; margin: 0; }
+        .transHeader a { font-size: 12.5px; color: #12294D; text-decoration: none; display: flex; align-items: center; gap: 2px; }
+        .vide { color: #8393A8; font-size: 13px; }
+        .transList { background: white; border-radius: 14px; overflow: hidden; }
+        .transItem { display: flex; align-items: center; gap: 10px; padding: 12px 14px; text-decoration: none; color: #12294D; border-bottom: 1px solid #F0F2F5; }
+        .transItem:last-child { border-bottom: none; }
+        .transIcon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
+        .transIconOk { background: #0E7C3F; }
+        .transIconAttente { background: #8393A8; }
+        .transInfo { flex: 1; display: flex; flex-direction: column; font-size: 13px; }
+        .transInfo span { font-size: 11px; color: #8393A8; }
+        .transMontant { font-size: 13px; font-weight: 700; color: #B8324D; }
       `}</style>
     </div>
   );

@@ -1,19 +1,21 @@
 'use client';
 
+import { Home, ScanLine, Receipt, User } from 'lucide-react';
+
 export default function BottomNav({ actif }) {
   const items = [
-    { id: 'accueil', label: 'Accueil', href: '/travailleur', icon: '🏠' },
-    { id: 'pharmacies', label: 'Pharmacies', href: '/travailleur/pharmacies', icon: '💊' },
-    { id: 'historique', label: 'Historique', href: '/travailleur/historique', icon: '📄' },
-    { id: 'profil', label: 'Profil', href: '/travailleur/profil', icon: '👤' },
+    { id: 'accueil', label: 'Accueil', href: '/travailleur', Icon: Home },
+    { id: 'scanner', label: 'Scanner', href: '/travailleur/scanner', Icon: ScanLine },
+    { id: 'achats', label: 'Mes achats', href: '/travailleur/historique', Icon: Receipt },
+    { id: 'profil', label: 'Mon profil', href: '/travailleur/profil', Icon: User },
   ];
 
   return (
     <nav className="bottomNav">
-      {items.map((it) => (
-        <a key={it.id} href={it.href} className={`navItem ${actif === it.id ? 'navItemActif' : ''}`}>
-          <span className="navIcon">{it.icon}</span>
-          <span>{it.label}</span>
+      {items.map(({ id, label, href, Icon }) => (
+        <a key={id} href={href} className={`navItem ${actif === id ? 'navItemActif' : ''}`}>
+          <Icon size={20} strokeWidth={actif === id ? 2.4 : 1.8} />
+          <span>{label}</span>
         </a>
       ))}
       <style jsx>{`
@@ -33,7 +35,7 @@ export default function BottomNav({ actif }) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 2px;
+          gap: 3px;
           font-size: 11px;
           color: #8393a8;
           text-decoration: none;
@@ -41,9 +43,6 @@ export default function BottomNav({ actif }) {
         .navItemActif {
           color: #12294d;
           font-weight: 600;
-        }
-        .navIcon {
-          font-size: 18px;
         }
       `}</style>
     </nav>
