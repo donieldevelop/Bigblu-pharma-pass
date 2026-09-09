@@ -4,7 +4,7 @@ export const metadata = {
   title: 'BIG BLU PHARMA PASS',
   description: 'Plateforme d\'accès des travailleurs aux médicaments via un réseau de pharmacies partenaires',
   manifest: '/manifest.json',
-  icons: { apple: '/icon-192.png' },
+  icons: { apple: '/icon-192.png', icon: '/favicon.png' },
 };
 
 export const viewport = {

@@ -23,7 +23,10 @@ export default function Home() {
           margin: '0 auto',
         }}
       >
-        <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: 0.2 }}>BIG BLU PHARMA PASS</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, fontSize: 15, letterSpacing: 0.2 }}>
+          <img src="/logo.png" alt="BIG BLU" style={{ height: 28, width: 'auto' }} />
+          BIG BLU PHARMA PASS
+        </span>
         <span style={{ fontSize: 13, color: '#5B6B82' }}>Un service BIG HOLDING SA</span>
       </header>
 
