@@ -10,6 +10,8 @@ export default function PharmacieDashboard() {
   const [infoTravailleur, setInfoTravailleur] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
   const [medicaments, setMedicaments] = useState([]);
+  const [dernierMedicamentId, setDernierMedicamentId] = useState(null);
+  const [moments, setMoments] = useState([]);
   const [nom, setNom] = useState('');
   const [quantite, setQuantite] = useState(1);
   const [prix, setPrix] = useState('');
@@ -45,7 +47,7 @@ export default function PharmacieDashboard() {
 
   async function ajouterMedicament() {
     setError('');
-    const { error } = await supabase.rpc('ajouter_medicament', {
+    const { data, error } = await supabase.rpc('ajouter_medicament', {
       p_transaction_id: transactionId,
       p_nom: nom,
       p_presentation: null,
@@ -54,9 +56,30 @@ export default function PharmacieDashboard() {
     });
     if (error) return setError(error.message);
     setMedicaments([...medicaments, { nom, quantite, prix }]);
+    setDernierMedicamentId(data);
+    setMoments([]);
     setNom('');
     setQuantite(1);
     setPrix('');
+  }
+
+  function toggleMoment(m) {
+    setMoments((prev) => (prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]));
+  }
+
+  async function enregistrerIndication() {
+    if (!dernierMedicamentId || moments.length === 0) return;
+    const { error } = await supabase.rpc('ajouter_indication', {
+      p_medicament_id: dernierMedicamentId,
+      p_moments_prise: moments,
+      p_frequence: null,
+      p_duree: null,
+      p_mode_administration: null,
+      p_note: null,
+    });
+    if (error) return setError(error.message);
+    setDernierMedicamentId(null);
+    setMoments([]);
   }
 
   async function valider() {
@@ -122,6 +145,20 @@ export default function PharmacieDashboard() {
               <li key={i}>{m.nom} — {m.quantite} × {m.prix} FCFA</li>
             ))}
           </ul>
+
+          {dernierMedicamentId && (
+            <div style={{ background: '#f5f6f8', padding: 12, borderRadius: 6, marginBottom: 12 }}>
+              <p style={{ fontSize: 13, margin: '0 0 8px' }}>Indications (facultatif) pour le dernier médicament ajouté :</p>
+              {['matin', 'midi', 'soir'].map((m) => (
+                <label key={m} style={{ marginRight: 12, fontSize: 13 }}>
+                  <input type="checkbox" checked={moments.includes(m)} onChange={() => toggleMoment(m)} /> {m}
+                </label>
+              ))}
+              <button onClick={enregistrerIndication} style={{ ...btnStyle, marginLeft: 12, padding: '4px 10px', fontSize: 12 }}>
+                Enregistrer
+              </button>
+            </div>
+          )}
 
           {medicaments.length > 0 && (
             <button onClick={valider} style={{ ...btnStyle, background: '#0e7c3f', marginTop: 12 }}>

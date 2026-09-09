@@ -84,10 +84,37 @@ export default function DashboardPage() {
         >
           Transactions →
         </a>
+        <a
+          href="/dashboard/recouvrement"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Dettes & Recouvrement →
+        </a>
+        <a
+          href="/dashboard/journaux"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Journaux d&apos;activité →
+        </a>
       </div>
-      <p style={{ color: '#999', fontSize: 14, marginTop: 24 }}>
-        Modules à venir : Dettes, Remboursements.
-      </p>
     </div>
   );
 }
