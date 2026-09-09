@@ -14,6 +14,7 @@ export default function PharmaciesPage() {
   const [longitude, setLongitude] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [emailsLiaison, setEmailsLiaison] = useState({});
   const router = useRouter();
 
   async function load() {
@@ -25,7 +26,7 @@ export default function PharmaciesPage() {
     }
     const { data, error } = await supabase
       .from('pharmacies')
-      .select('id, nom, adresse, latitude, longitude, statut, qr_code_id')
+      .select('id, nom, adresse, latitude, longitude, statut, qr_code_id, user_id')
       .order('nom', { ascending: true });
     if (error) setError(error.message);
     setPharmacies(data || []);
@@ -56,6 +57,25 @@ export default function PharmaciesPage() {
     setAdresse('');
     setLatitude('');
     setLongitude('');
+    load();
+  }
+
+  async function lierCompte(pharmacieId) {
+    setError('');
+    const email = emailsLiaison[pharmacieId];
+    if (!email) return;
+    const { data: user, error: e1 } = await supabase
+      .from('utilisateurs')
+      .select('id')
+      .eq('email', email)
+      .eq('role', 'pharmacie')
+      .maybeSingle();
+    if (e1 || !user) {
+      setError("Aucun compte pharmacie trouvé avec cet e-mail (l'inscription doit être faite d'abord sur /inscription-pharmacie).");
+      return;
+    }
+    const { error: e2 } = await supabase.from('pharmacies').update({ user_id: user.id }).eq('id', pharmacieId);
+    if (e2) return setError(e2.message);
     load();
   }
 
@@ -97,6 +117,24 @@ export default function PharmaciesPage() {
               <p style={{ fontSize: 12, color: '#888', margin: '4px 0 12px' }}>{p.adresse}</p>
               <QrCodeCanvas value={p.qr_code_id} size={140} />
               <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>{p.statut}</p>
+              {p.user_id ? (
+                <p style={{ fontSize: 11, color: '#0e7c3f', marginTop: 4 }}>Compte pharmacien lié ✓</p>
+              ) : (
+                <div style={{ marginTop: 8, display: 'flex', gap: 4 }}>
+                  <input
+                    placeholder="e-mail du pharmacien"
+                    value={emailsLiaison[p.id] || ''}
+                    onChange={(e) => setEmailsLiaison({ ...emailsLiaison, [p.id]: e.target.value })}
+                    style={{ flex: 1, padding: 6, fontSize: 12, borderRadius: 6, border: '1px solid #ddd' }}
+                  />
+                  <button
+                    onClick={() => lierCompte(p.id)}
+                    style={{ padding: '6px 10px', fontSize: 12, borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}
+                  >
+                    Lier
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
