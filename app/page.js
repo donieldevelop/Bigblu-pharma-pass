@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Pill, ShieldCheck, Building2, Users, ChevronRight } from 'lucide-react';
+import { ShieldCheck, ScanLine, Building2, Users, ChevronRight, Pill } from 'lucide-react';
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
@@ -11,142 +11,196 @@ export default function Home() {
     return () => clearTimeout(t);
   }, []);
 
-  const badges = [
-    { Icon: Pill, texte: 'Un crédit mensuel dédié' },
-    { Icon: ShieldCheck, texte: 'Utilisation simple avec QR Code' },
-    { Icon: Building2, texte: 'Réseau de pharmacies partenaires' },
-    { Icon: Users, texte: 'Pour tous les travailleurs' },
+  const avantages = [
+    { Icon: ShieldCheck, titre: 'Simple et sécurisé', texte: "Un système conçu pour faciliter l'accès aux médicaments." },
+    { Icon: ScanLine, titre: 'Utilisation par QR Code', texte: 'Identifiez rapidement le travailleur et la pharmacie.' },
+    { Icon: Building2, titre: 'Pharmacies partenaires', texte: 'Un réseau de pharmacies partenaires en développement.' },
+    { Icon: Users, titre: 'Pour les travailleurs', texte: 'Une solution pensée pour les salariés et leurs entreprises.' },
+  ];
+
+  const etapes = [
+    { n: 1, titre: "Le travailleur s'abonne", texte: 'Il crée son compte et bénéficie de son plafond mensuel.' },
+    { n: 2, titre: 'Il utilise son crédit', texte: 'Il se rend dans une pharmacie partenaire et utilise son QR Code.' },
+    { n: 3, titre: 'La transaction est enregistrée', texte: 'BIG HOLDING SA gère la transaction et le règlement de la pharmacie.' },
   ];
 
   return (
     <div className="page">
       <header className="header">
         <img src="/logo.png" alt="BIG BLU HOLDING AFRICA" className="logo" />
-        <span className="lang">FR</span>
+        <span className="lang">FR ▾</span>
       </header>
 
       <section className={`hero ${visible ? 'heroVisible' : ''}`}>
         <div className="heroText">
           <p className="eyebrow">BIG BLU PHARMA PASS</p>
           <h1 className="titre">
-            Le <span className="accentBlue">crédit médicament</span> de vos travailleurs,
-            réglé en <span className="accentPurple">pharmacie</span>.
+            Le crédit médicament <span className="accent">de vos travailleurs,</span> réglé en pharmacie.
           </h1>
           <p className="paragraphe">
-            Une solution simple, sécurisée et accessible pour prendre soin de la santé de ceux
-            qui font avancer votre entreprise.
+            Une solution simple, sécurisée et accessible pour permettre aux travailleurs de prendre
+            soin de leur santé auprès de pharmacies partenaires.
           </p>
+          <div className="boutons">
+            <a href="/travailleur/login" className="btnPrimaire">Se connecter <ChevronRight size={18} /></a>
+            <a href="/travailleur/inscription" className="btnSecondaire">Créer un compte</a>
+          </div>
         </div>
 
-        <div className="heroVisuelWrap">
-          <div className="heroVisuel">
-            <Pill size={64} strokeWidth={1.2} />
-          </div>
-          <div className="bulle">
-            <strong>Votre santé, notre priorité</strong>
-            <span>Des pharmacies partenaires près de vous.</span>
-          </div>
+        <div className="heroVisuel">
+          <Pill size={72} strokeWidth={1.1} />
         </div>
       </section>
 
-      <section className="badges">
-        {badges.map((b) => (
-          <div key={b.texte} className="badge">
-            <div className="badgeIcone"><b.Icon size={22} /></div>
-            <span>{b.texte}</span>
+      <section className="avantages">
+        {avantages.map((a) => (
+          <div key={a.titre} className="avantage">
+            <div className="avantageIcone"><a.Icon size={26} /></div>
+            <h3>{a.titre}</h3>
+            <p>{a.texte}</p>
           </div>
         ))}
       </section>
 
-      <section className="boutons">
-        <a href="/travailleur/login" className="boutonPrimaire">
-          Se connecter <ChevronRight size={18} />
-        </a>
-        <a href="/travailleur/inscription" className="boutonSecondaire">
-          Créer un compte <ChevronRight size={18} />
-        </a>
+      <section className="passSection">
+        <div className="passCard">
+          <div className="passName">BIG BLU PHARMA PASS</div>
+          <div className="passLabel">Plafond mensuel</div>
+          <div className="passAmount">30 000 FCFA</div>
+          <div className="passSub">Abonnement : 1 500 F/mois</div>
+        </div>
+        <div className="passDescription">
+          <h2>Votre santé, notre priorité.</h2>
+          <p>Chaque travailleur abonné dispose d&apos;un plafond mensuel utilisable directement auprès des pharmacies partenaires.</p>
+        </div>
       </section>
 
-      <section className="bas">
-        <div className="basContenu">
-          <div className="passCard">
-            <div className="passCardTop">
-              <span className="passCardLabel">BIGBLU PHARMA PASS</span>
-              <div className="passCardChip" />
+      <section className="how">
+        <h2 className="sectionTitre">Comment ça marche ?</h2>
+        <p className="sectionSous">BIG BLU PHARMA PASS simplifie le parcours entre le travailleur, la pharmacie et BIG HOLDING SA.</p>
+        <div className="steps">
+          {etapes.map((e) => (
+            <div key={e.n} className="step">
+              <div className="stepNumero">{e.n}</div>
+              <h3>{e.titre}</h3>
+              <p>{e.texte}</p>
             </div>
-            <div className="passCardCaption">Plafond mensuel</div>
-            <div className="passCardAmount">30 000 FCFA</div>
-            <div className="passCardFooter">
-              <span>Abonnement : 1 500 F/mois</span>
-              <span>BIG HOLDING SA</span>
-            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="pharmacies">
+        <div className="pharmacyBox">
+          <div>
+            <h2>Un réseau de pharmacies partenaires</h2>
+            <p>Les pharmacies partenaires permettent aux travailleurs d&apos;utiliser leur crédit médicament en toute simplicité.</p>
           </div>
-          <p className="tagline">Des travailleurs en bonne santé, des entreprises plus fortes.</p>
+          <a href="/travailleur/pharmacies" className="btnPrimaire">Voir les pharmacies</a>
+        </div>
+      </section>
+
+      <section className="cta">
+        <h2>Prêt à rejoindre BIG BLU PHARMA PASS ?</h2>
+        <p>Accédez à votre espace ou créez votre compte.</p>
+        <div className="ctaBoutons">
+          <a href="/travailleur/login" className="btnCtaPrimaire">Se connecter</a>
+          <a href="/travailleur/inscription" className="btnCtaSecondaire">Créer un compte</a>
         </div>
         <p className="proEspace">
           Vous êtes une pharmacie partenaire ? <a href="/pharmacie/login">Accéder à votre espace</a>
         </p>
       </section>
 
-      <style jsx>{`
-        .page { background: #EEF2F6; min-height: 100vh; color: #12294D; overflow-x: hidden; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; max-width: 1100px; margin: 0 auto; }
-        .logo { height: 44px; width: auto; }
-        .lang { font-size: 13px; font-weight: 600; color: #5B6B82; }
+      <footer className="footer">© 2026 BIG HOLDING SA — BIG BLU HOLDING AFRICA</footer>
 
-        .hero { max-width: 1100px; margin: 0 auto; padding: 12px 20px 32px; display: flex; flex-direction: column; gap: 24px;
+      <style jsx>{`
+        :root {}
+        .page { background: #F5F9FD; color: #172F55; overflow-x: hidden; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 20px; background: white; }
+        .logo { height: 40px; width: auto; }
+        .lang { font-weight: 700; color: #123D78; font-size: 14px; }
+
+        .hero { position: relative; padding: 28px 20px 36px; background: linear-gradient(135deg, #ffffff 0%, #f3f8ff 55%, #edf5ff 100%);
+          display: flex; flex-direction: column; gap: 24px;
           opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .heroVisible { opacity: 1; transform: translateY(0); }
-        .eyebrow { font-size: 12px; letter-spacing: 0.6px; color: #8393A8; margin: 0 0 8px; text-transform: uppercase; }
-        .titre { font-size: 28px; line-height: 1.25; font-weight: 800; margin: 0 0 14px; }
-        .accentBlue { color: #2E7BC4; }
-        .accentPurple { color: #6C4FB3; }
-        .paragraphe { font-size: 14.5px; color: #3E4C63; line-height: 1.6; margin: 0; }
+        .eyebrow { color: #1668C7; font-size: 13px; font-weight: 700; letter-spacing: 0.8px; margin-bottom: 12px; }
+        .titre { font-size: 30px; line-height: 1.1; font-weight: 800; color: #123D78; margin: 0 0 16px; }
+        .accent { color: #4D197E; }
+        .paragraphe { font-size: 15px; line-height: 1.6; color: #5F6F85; margin: 0 0 20px; }
+        .boutons { display: flex; flex-direction: column; gap: 10px; }
+        .btnPrimaire, .btnSecondaire { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 50px; padding: 0 24px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14.5px; }
+        .btnPrimaire { background: #1668C7; color: white; }
+        .btnSecondaire { background: white; color: #123D78; border: 2px solid #1668C7; }
 
-        .heroVisuelWrap { position: relative; }
-        .heroVisuel { background: linear-gradient(135deg, #DCE7F7 0%, #C9D9EF 100%); border-radius: 18px; height: 200px;
+        .heroVisuel { min-height: 220px; border-radius: 24px; background: linear-gradient(135deg, rgba(17,65,120,0.06), rgba(77,25,126,0.09));
           display: flex; align-items: center; justify-content: center; color: #6C88B0; }
-        .bulle { position: absolute; bottom: -16px; right: 16px; background: white; border-radius: 12px; padding: 12px 16px;
-          box-shadow: 0 8px 20px -6px rgba(18,41,77,0.2); display: flex; flex-direction: column; gap: 2px; max-width: 210px; }
-        .bulle strong { font-size: 13px; color: #12294D; }
-        .bulle span { font-size: 11px; color: #5B6B82; }
 
-        .badges { max-width: 1100px; margin: 32px auto 0; padding: 0 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .badge { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
-        .badgeIcone { width: 52px; height: 52px; border-radius: 50%; background: #DCE7F7; color: #12294D; display: flex; align-items: center; justify-content: center; }
-        .badge span { font-size: 12.5px; color: #3E4C63; font-weight: 600; }
+        .avantages { background: white; padding: 32px 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .avantage { text-align: center; }
+        .avantageIcone { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; background: #E9F3FF; color: #1668C7; }
+        .avantage h3 { font-size: 14px; margin-bottom: 4px; }
+        .avantage p { color: #5F6F85; font-size: 12px; line-height: 1.4; }
 
-        .boutons { max-width: 1100px; margin: 28px auto 0; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
-        .boutonPrimaire, .boutonSecondaire { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 15px; border-radius: 10px; font-weight: 700; font-size: 14.5px; text-decoration: none; }
-        .boutonPrimaire { background: #12294D; color: white; }
-        .boutonSecondaire { background: white; color: #12294D; border: 1px solid #C9D3E0; }
+        .passSection { padding: 36px 20px; background: #F5F9FD; display: flex; flex-direction: column; gap: 24px; }
+        .passCard { min-height: 220px; padding: 26px; border-radius: 22px; color: white; background: linear-gradient(135deg, #103665, #125fbd);
+          box-shadow: 0 20px 40px rgba(18,61,120,0.18); }
+        .passName { font-size: 13px; letter-spacing: 0.8px; margin-bottom: 36px; opacity: 0.9; }
+        .passLabel { font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
+        .passAmount { font-size: 32px; font-weight: 800; margin-bottom: 14px; }
+        .passSub { font-size: 13px; opacity: 0.9; }
+        .passDescription h2 { font-size: 24px; line-height: 1.2; margin: 0 0 12px; color: #123D78; }
+        .passDescription p { color: #5F6F85; font-size: 14.5px; line-height: 1.6; margin: 0; }
 
-        .bas { margin-top: 44px; background: linear-gradient(180deg, #12294D 0%, #1A3A6B 100%); border-radius: 32px 32px 0 0; padding: 40px 20px 28px; }
-        .basContenu { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-        .passCard { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; color: white; }
-        .passCardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 26px; }
-        .passCardLabel { font-size: 11px; letter-spacing: 0.5px; opacity: 0.8; }
-        .passCardChip { width: 26px; height: 20px; border-radius: 4px; background: #D98E3B; }
-        .passCardCaption { font-size: 12px; opacity: 0.7; margin-bottom: 2px; }
-        .passCardAmount { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
-        .passCardFooter { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.75; gap: 8px; }
-        .tagline { color: white; font-size: 16px; font-weight: 600; text-align: center; margin: 0; }
-        .proEspace { text-align: center; font-size: 12px; color: rgba(255,255,255,0.6); margin: 24px 0 0; }
+        .how { background: white; padding: 40px 20px; text-align: center; }
+        .sectionTitre { font-size: 24px; color: #123D78; margin: 0 0 8px; }
+        .sectionSous { color: #5F6F85; line-height: 1.6; font-size: 14px; max-width: 500px; margin: 0 auto 28px; }
+        .steps { display: flex; flex-direction: column; gap: 16px; text-align: left; }
+        .step { padding: 22px; border-radius: 16px; background: #F7FAFF; }
+        .stepNumero { width: 40px; height: 40px; margin-bottom: 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #123D78; color: white; font-weight: 800; }
+        .step h3 { font-size: 15px; margin: 0 0 6px; }
+        .step p { color: #5F6F85; font-size: 13px; line-height: 1.5; margin: 0; }
+
+        .pharmacies { padding: 40px 20px; background: #EEF6FF; }
+        .pharmacyBox { background: white; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 18px; }
+        .pharmacyBox h2 { font-size: 20px; color: #123D78; margin: 0 0 10px; }
+        .pharmacyBox p { color: #5F6F85; line-height: 1.6; font-size: 14px; margin: 0; }
+        .pharmacyBox .btnPrimaire { align-self: flex-start; }
+
+        .cta { padding: 44px 20px; text-align: center; background: linear-gradient(135deg, #123D78, #4D197E); color: white; }
+        .cta h2 { font-size: 24px; margin: 0 0 10px; }
+        .cta p { font-size: 14.5px; opacity: 0.9; margin: 0 0 22px; }
+        .ctaBoutons { display: flex; flex-direction: column; gap: 10px; max-width: 340px; margin: 0 auto; }
+        .btnCtaPrimaire, .btnCtaSecondaire { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 24px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14.5px; }
+        .btnCtaPrimaire { background: white; color: #123D78; }
+        .btnCtaSecondaire { background: transparent; color: white; border: 2px solid white; }
+        .proEspace { margin-top: 22px; font-size: 12px; opacity: 0.75; }
         .proEspace a { color: white; font-weight: 600; text-decoration: underline; }
 
-        @media (min-width: 720px) {
-          .header { padding: 24px 40px; }
-          .hero { flex-direction: row; align-items: center; padding: 24px 40px 48px; gap: 48px; }
-          .heroText { flex: 1.1; }
-          .titre { font-size: 40px; }
-          .heroVisuelWrap { flex: 0.9; }
-          .heroVisuel { height: 320px; }
-          .badges { grid-template-columns: repeat(4, 1fr); padding: 0 40px; }
-          .boutons { flex-direction: row; padding: 0 40px; max-width: 480px; }
-          .bas { padding: 56px 40px 36px; }
-          .basContenu { flex-direction: row; align-items: center; justify-content: center; gap: 48px; }
-          .passCard { width: 320px; flex-shrink: 0; }
-          .tagline { text-align: left; max-width: 280px; font-size: 20px; }
+        .footer { background: #0D2850; color: white; text-align: center; padding: 20px; font-size: 12.5px; }
+
+        @media (min-width: 800px) {
+          .header { padding: 22px 6%; }
+          .logo { height: 44px; }
+          .hero { padding: 35px 6% 45px; flex-direction: row; align-items: center; gap: 30px; }
+          .heroText { flex: 1; }
+          .titre { font-size: 56px; }
+          .paragraphe { font-size: 18px; max-width: 600px; }
+          .boutons { flex-direction: row; }
+          .heroVisuel { flex: 0.8; min-height: 400px; border-radius: 35px; }
+          .avantages { grid-template-columns: repeat(4, 1fr); padding: 45px 6%; max-width: 1100px; margin: 0 auto; }
+          .passSection { flex-direction: row; padding: 55px 6%; max-width: 1100px; margin: 0 auto; align-items: center; }
+          .passCard, .passDescription { flex: 1; }
+          .passDescription h2 { font-size: 34px; }
+          .how { padding: 60px 6%; }
+          .steps { flex-direction: row; max-width: 1050px; margin: 0 auto; text-align: center; }
+          .step { flex: 1; }
+          .stepNumero { margin-left: auto; margin-right: auto; }
+          .pharmacies { padding: 60px 6%; }
+          .pharmacyBox { max-width: 1050px; margin: 0 auto; flex-direction: row; justify-content: space-between; align-items: center; padding: 40px; }
+          .pharmacyBox .btnPrimaire { align-self: auto; flex-shrink: 0; }
+          .cta { padding: 64px 6%; }
+          .ctaBoutons { flex-direction: row; justify-content: center; max-width: none; }
         }
       `}</style>
     </div>
