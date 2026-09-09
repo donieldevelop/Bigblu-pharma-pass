@@ -114,6 +114,21 @@ export default function DashboardPage() {
         >
           Journaux d&apos;activité →
         </a>
+        <a
+          href="/dashboard/notifications"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Notifications →
+        </a>
       </div>
     </div>
   );
