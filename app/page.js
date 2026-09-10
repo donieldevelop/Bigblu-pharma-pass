@@ -50,7 +50,7 @@ export default function Home() {
         {avantages.map((a, i) => (
           <div key={a.titre} className="avantage">
             <div className={`avantageIcone ${i % 2 === 0 ? 'iconeBleue' : 'iconeViolette'}`}>
-              <img src={a.icone} alt="" width={28} height={28} />
+              <img src={a.icone} alt="" width={40} height={40} />
             </div>
             <span>{a.titre}</span>
           </div>
@@ -109,7 +109,7 @@ export default function Home() {
 
         .avantages { padding: 20px 16px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
         .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
-        .avantageIcone { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .avantageIcone { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .iconeBleue { background: #DCE7F7; }
         .iconeViolette { background: #EDE7F9; }
         .avantage span { font-size: 12px; color: #3E4C63; font-weight: 600; line-height: 1.3; }
