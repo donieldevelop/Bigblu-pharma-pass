@@ -29,7 +29,7 @@ export default function Home() {
         <div className="heroText">
           <p className="eyebrow">BIG BLU PHARMA PASS</p>
           <h1 className="titre">
-            Le crédit <span className="accentBlue">médicament</span> de vos travailleurs, réglé en <span className="accentPurple">pharmacie</span>.
+            Ton crédit <span className="accentBlue">médicament</span>, réglé directement en <span className="accentPurple">pharmacie</span>.
           </h1>
           <p className="paragraphe">
             Chaque travailleur abonné dispose d&apos;un plafond mensuel qu&apos;il utilise directement
