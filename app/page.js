@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShieldCheck, ScanLine, Building2, Users, ChevronRight, Pill } from 'lucide-react';
+import { ChevronRight, Pill } from 'lucide-react';
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
@@ -12,10 +12,10 @@ export default function Home() {
   }, []);
 
   const avantages = [
-    { Icon: ShieldCheck, titre: 'Simple et sécurisé', texte: "Un système conçu pour faciliter l'accès aux médicaments." },
-    { Icon: ScanLine, titre: 'Utilisation par QR Code', texte: 'Identifiez rapidement le travailleur et la pharmacie.' },
-    { Icon: Building2, titre: 'Pharmacies partenaires', texte: 'Un réseau de pharmacies partenaires en développement.' },
-    { Icon: Users, titre: 'Pour les travailleurs', texte: 'Une solution pensée pour les salariés et leurs entreprises.' },
+    { icone: '/icons/icon-credit.png', titre: 'Simple et sécurisé', texte: "Un système conçu pour faciliter l'accès aux médicaments." },
+    { icone: '/icons/icon-securite.png', titre: 'Utilisation par QR Code', texte: 'Identifiez rapidement le travailleur et la pharmacie.' },
+    { icone: '/icons/icon-pharmacie.png', titre: 'Pharmacies partenaires', texte: 'Un réseau de pharmacies partenaires en développement.' },
+    { icone: '/icons/icon-travailleurs.png', titre: 'Pour les travailleurs', texte: 'Une solution pensée pour les salariés et leurs entreprises.' },
   ];
 
   const etapes = [
@@ -55,7 +55,7 @@ export default function Home() {
       <section className="avantages">
         {avantages.map((a) => (
           <div key={a.titre} className="avantage">
-            <div className="avantageIcone"><a.Icon size={26} /></div>
+            <div className="avantageIcone"><img src={a.icone} alt="" width={32} height={32} /></div>
             <h3>{a.titre}</h3>
             <p>{a.texte}</p>
           </div>
