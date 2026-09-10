@@ -89,17 +89,17 @@ export default function Home() {
         .logo { height: 40px; width: auto; }
         .lang { font-size: 13px; font-weight: 600; color: #5B6B82; }
 
-        .hero { position: relative; padding: 12px 16px 28px; display: flex; flex-direction: row; align-items: center; gap: 16px;
+        .hero { position: relative; padding: 12px 0 24px 16px; display: flex; flex-direction: row; align-items: center; gap: 14px;
           opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .heroVisible { opacity: 1; transform: translateY(0); }
-        .heroText { flex: 1.15; min-width: 0; }
+        .heroText { flex: 1.15; min-width: 0; padding-right: 4px; }
         .eyebrow { font-size: 10.5px; letter-spacing: 0.6px; color: #8393A8; margin: 0 0 8px; text-transform: uppercase; }
         .titre { font-size: 22px; line-height: 1.2; font-weight: 800; margin: 0 0 10px; }
         .accentBlue { color: #2E7BC4; }
         .accentPurple { color: #6C4FB3; }
         .paragraphe { font-size: 12.5px; color: #3E4C63; line-height: 1.5; margin: 0; }
 
-        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 18px; overflow: hidden; position: relative;
+        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 20px 0 0 20px; overflow: hidden; position: relative;
           background: linear-gradient(135deg, #DCE7F7 0%, #C9D9EF 100%); }
         .heroPhoto { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
         .bulle { position: absolute; bottom: 10px; right: 10px; left: 10px; background: white; border-radius: 12px; padding: 12px 14px;
@@ -107,19 +107,19 @@ export default function Home() {
         .bulle strong { font-size: 12.5px; color: #12294D; }
         .bulle span { font-size: 10.5px; color: #5B6B82; }
 
-        .avantages { padding: 28px 16px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
-        .avantageIcone { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .avantages { padding: 20px 16px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+        .avantageIcone { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .iconeBleue { background: #DCE7F7; }
         .iconeViolette { background: #EDE7F9; }
-        .avantage span { font-size: 12.5px; color: #3E4C63; font-weight: 600; }
+        .avantage span { font-size: 12px; color: #3E4C63; font-weight: 600; line-height: 1.3; }
 
-        .boutons { padding: 24px 16px 0; display: flex; flex-direction: column; gap: 10px; }
-        .btnPrimaire, .btnSecondaire { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 15px; border-radius: 10px; font-weight: 700; font-size: 14.5px; text-decoration: none; }
+        .boutons { padding: 18px 16px 0; display: flex; flex-direction: column; gap: 8px; }
+        .btnPrimaire, .btnSecondaire { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; }
         .btnPrimaire { background: #12294D; color: white; }
         .btnSecondaire { background: white; color: #12294D; border: 1px solid #C9D3E0; }
 
-        .bas { margin-top: 32px; background: linear-gradient(180deg, #12294D 0%, #1A3A6B 100%); border-radius: 32px 32px 0 0; padding: 32px 20px 24px; }
+        .bas { margin-top: 24px; background: linear-gradient(180deg, #12294D 0%, #1A3A6B 100%); border-radius: 32px 32px 0 0; padding: 26px 20px 20px; }
         .basContenu { display: flex; flex-direction: column; gap: 20px; }
         .passCard { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; color: white; }
         .passCardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 26px; }
