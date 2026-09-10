@@ -36,7 +36,7 @@ export default function LoginPage() {
           width: 340,
         }}
       >
-        <h1 style={{ fontSize: 20, marginBottom: 4 }}>BIG BLU PHARMA PASS</h1>
+        <h1 style={{ fontSize: 20, marginBottom: 4 }}>BIGBLU PHARMA PASS</h1>
         <p style={{ color: '#666', marginTop: 0, marginBottom: 24, fontSize: 14 }}>
           Espace Administration
         </p>

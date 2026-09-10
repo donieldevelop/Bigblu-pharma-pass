@@ -1,7 +1,7 @@
 import RegisterSW from './components/RegisterSW';
 
 export const metadata = {
-  title: 'BIG BLU PHARMA PASS',
+  title: 'BIGBLU PHARMA PASS',
   description: 'Plateforme d\'accès des travailleurs aux médicaments via un réseau de pharmacies partenaires',
   manifest: '/manifest.json',
   icons: { apple: '/icon-192.png', icon: '/favicon.png' },

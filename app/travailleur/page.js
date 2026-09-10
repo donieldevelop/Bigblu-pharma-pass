@@ -55,9 +55,9 @@ export default function TravailleurDashboard() {
       <div className="content">
         <header className="topBar">
           <div className="brand">
-            <img src="/logo.png" alt="BIG BLU" className="logo" />
+            <img src="/logo.png" alt="BIGBLU" className="logo" />
             <div>
-              <div className="brandTitle">BIG BLU PHARMA PASS</div>
+              <div className="brandTitle">BIGBLU PHARMA PASS</div>
               <div className="brandSub">Votre santé, notre priorité</div>
             </div>
           </div>

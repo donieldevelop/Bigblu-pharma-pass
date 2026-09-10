@@ -30,7 +30,7 @@ export default function DashboardPage() {
   return (
     <div style={{ padding: 32 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22 }}>Tableau de bord — BIG BLU PHARMA PASS</h1>
+        <h1 style={{ fontSize: 22 }}>Tableau de bord — BIGBLU PHARMA PASS</h1>
         <button onClick={handleLogout} style={{ padding: '8px 16px', borderRadius: 6, border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>
           Déconnexion
         </button>

@@ -23,7 +23,7 @@ export default function QrCodePage() {
   async function partager() {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'Mon QR Code BIG BLU PHARMA PASS', text: session?.user?.id });
+        await navigator.share({ title: 'Mon QR Code BIGBLU PHARMA PASS', text: session?.user?.id });
       } catch {}
     }
   }

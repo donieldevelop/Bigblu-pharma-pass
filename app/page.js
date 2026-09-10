@@ -21,13 +21,13 @@ export default function Home() {
   return (
     <div className="page">
       <header className="header">
-        <img src="/logo.png" alt="BIG BLU HOLDING AFRICA" className="logo" />
+        <img src="/logo.png" alt="BIGBLU HOLDING AFRICA" className="logo" />
         <span className="lang">FR ▾</span>
       </header>
 
       <section className={`hero ${visible ? 'heroVisible' : ''}`}>
         <div className="heroText">
-          <p className="eyebrow">BIG BLU PHARMA PASS</p>
+          <p className="eyebrow">BIGBLU PHARMA PASS</p>
           <h1 className="titre">
             Ton crédit <span className="accentBlue">médicament</span>, réglé directement en <span className="accentPurple">pharmacie</span>.
           </h1>

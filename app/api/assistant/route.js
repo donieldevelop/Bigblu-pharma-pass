@@ -43,7 +43,7 @@ Données réelles du travailleur connecté (à utiliser pour répondre) :
 - Dernières transactions : ${transactions?.length ? transactions.map(t => `${t.montant_total} FCFA (${t.statut})`).join(', ') : 'aucune'}
 `;
 
-  const systemPrompt = `Tu es l'assistant intégré de BIG BLU PHARMA PASS, une plateforme d'accès des travailleurs
+  const systemPrompt = `Tu es l'assistant intégré de BIGBLU PHARMA PASS, une plateforme d'accès des travailleurs
 aux médicaments via des pharmacies partenaires. Tu réponds UNIQUEMENT aux questions sur le fonctionnement
 de la plateforme : crédit, abonnement, recherche de pharmacies, transactions, reçus, indications, remboursements.
 Tu utilises les données réelles fournies ci-dessous pour répondre précisément.
