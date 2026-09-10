@@ -50,7 +50,7 @@ export default function Home() {
         {avantages.map((a, i) => (
           <div key={a.titre} className="avantage">
             <div className={`avantageIcone ${i % 2 === 0 ? 'iconeBleue' : 'iconeViolette'}`}>
-              <img src={a.icone} alt="" width={40} height={40} />
+              <img src={a.icone} alt="" width={28} height={28} />
             </div>
             <span>{a.titre}</span>
           </div>
@@ -107,12 +107,12 @@ export default function Home() {
         .bulle strong { font-size: 12.5px; color: #12294D; }
         .bulle span { font-size: 10.5px; color: #5B6B82; }
 
-        .avantages { padding: 20px 16px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .avantages { padding: 20px 12px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
-        .avantageIcone { width: 62px; height: 62px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .avantageIcone { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .iconeBleue { background: #DCE7F7; }
         .iconeViolette { background: #EDE7F9; }
-        .avantage span { font-size: 12px; color: #3E4C63; font-weight: 600; line-height: 1.3; }
+        .avantage span { font-size: 10px; color: #3E4C63; font-weight: 600; line-height: 1.25; }
 
         .boutons { padding: 18px 16px 0; display: flex; flex-direction: column; gap: 8px; }
         .btnPrimaire, .btnSecondaire { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; }
