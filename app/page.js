@@ -89,7 +89,7 @@ export default function Home() {
         .logo { height: 40px; width: auto; }
         .lang { font-size: 13px; font-weight: 600; color: #5B6B82; }
 
-        .hero { position: relative; padding: 12px 0 24px 16px; display: flex; flex-direction: row; align-items: center; gap: 14px;
+        .hero { position: relative; padding: 10px 0 16px 16px; display: flex; flex-direction: row; align-items: center; gap: 14px;
           opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .heroVisible { opacity: 1; transform: translateY(0); }
         .heroText { flex: 1.15; min-width: 0; padding-right: 4px; }
@@ -99,30 +99,30 @@ export default function Home() {
         .accentPurple { color: #6C4FB3; }
         .paragraphe { font-size: 12.5px; color: #3E4C63; line-height: 1.5; margin: 0; }
 
-        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; overflow: hidden; position: relative; }
-        .heroPhoto {
-          width: 100%; height: 100%; object-fit: cover; object-position: top center;
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 22%);
-          mask-image: linear-gradient(to right, transparent 0%, black 22%);
+        .heroVisuel { flex: 0.85; min-height: 240px; align-self: stretch; overflow: hidden; position: relative; }
+        .heroVisuel::before {
+          content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+          background: linear-gradient(to right, #EEF2F6 0%, rgba(238,242,246,0.7) 10%, rgba(238,242,246,0) 28%);
         }
+        .heroPhoto { width: 100%; height: 100%; object-fit: cover; object-position: top center; position: relative; }
         .bulle { position: absolute; bottom: 10px; right: 10px; left: 10px; background: white; border-radius: 12px; padding: 12px 14px;
           box-shadow: 0 8px 20px -6px rgba(18,41,77,0.25); display: flex; flex-direction: column; gap: 3px; }
         .bulle strong { font-size: 12.5px; color: #12294D; }
         .bulle span { font-size: 10.5px; color: #5B6B82; }
 
-        .avantages { padding: 20px 12px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .avantages { padding: 14px 12px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
         .avantageIcone { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .iconeBleue { background: #DCE7F7; }
         .iconeViolette { background: #EDE7F9; }
         .avantage span { font-size: 10px; color: #3E4C63; font-weight: 600; line-height: 1.25; }
 
-        .boutons { padding: 18px 16px 0; display: flex; flex-direction: column; gap: 8px; }
+        .boutons { padding: 14px 16px 0; display: flex; flex-direction: column; gap: 8px; }
         .btnPrimaire, .btnSecondaire { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 14px; text-decoration: none; }
         .btnPrimaire { background: #12294D; color: white; }
         .btnSecondaire { background: white; color: #12294D; border: 1px solid #C9D3E0; }
 
-        .bas { margin-top: 24px; background: linear-gradient(180deg, #12294D 0%, #1A3A6B 100%); border-radius: 32px 32px 0 0; padding: 26px 20px 20px; }
+        .bas { margin-top: 16px; background: linear-gradient(180deg, #12294D 0%, #1A3A6B 100%); border-radius: 28px 28px 0 0; padding: 20px 20px 18px; }
         .basContenu { display: flex; flex-direction: column; gap: 20px; }
         .passCard { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px; color: white; }
         .passCardTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 26px; }
