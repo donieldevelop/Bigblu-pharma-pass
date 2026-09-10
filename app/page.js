@@ -39,13 +39,19 @@ export default function Home() {
 
         <div className="heroVisuel">
           <img src="/pharmacienne.jpg" alt="Pharmacienne partenaire" className="heroPhoto" />
+          <div className="bulle">
+            <strong>Votre santé, notre priorité</strong>
+            <span>Des pharmacies partenaires près de vous.</span>
+          </div>
         </div>
       </section>
 
       <section className="avantages">
-        {avantages.map((a) => (
+        {avantages.map((a, i) => (
           <div key={a.titre} className="avantage">
-            <img src={a.icone} alt="" width={44} height={44} />
+            <div className={`avantageIcone ${i % 2 === 0 ? 'iconeBleue' : 'iconeViolette'}`}>
+              <img src={a.icone} alt="" width={28} height={28} />
+            </div>
             <span>{a.titre}</span>
           </div>
         ))}
@@ -92,12 +98,19 @@ export default function Home() {
         .accent { color: #2E7BC4; }
         .paragraphe { font-size: 12.5px; color: #3E4C63; line-height: 1.5; margin: 0; }
 
-        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 18px; overflow: hidden;
+        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 18px; overflow: hidden; position: relative;
           background: linear-gradient(135deg, #DCE7F7 0%, #C9D9EF 100%); }
         .heroPhoto { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+        .bulle { position: absolute; bottom: 10px; right: 10px; left: 10px; background: white; border-radius: 12px; padding: 12px 14px;
+          box-shadow: 0 8px 20px -6px rgba(18,41,77,0.25); display: flex; flex-direction: column; gap: 3px; }
+        .bulle strong { font-size: 12.5px; color: #12294D; }
+        .bulle span { font-size: 10.5px; color: #5B6B82; }
 
         .avantages { padding: 28px 16px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+        .avantageIcone { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .iconeBleue { background: #DCE7F7; }
+        .iconeViolette { background: #EDE7F9; }
         .avantage span { font-size: 12.5px; color: #3E4C63; font-weight: 600; }
 
         .boutons { padding: 24px 16px 0; display: flex; flex-direction: column; gap: 10px; }
