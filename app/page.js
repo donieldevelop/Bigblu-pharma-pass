@@ -99,9 +99,12 @@ export default function Home() {
         .accentPurple { color: #6C4FB3; }
         .paragraphe { font-size: 12.5px; color: #3E4C63; line-height: 1.5; margin: 0; }
 
-        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 20px 0 0 20px; overflow: hidden; position: relative;
-          background: linear-gradient(135deg, #DCE7F7 0%, #C9D9EF 100%); }
-        .heroPhoto { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+        .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; overflow: hidden; position: relative; }
+        .heroPhoto {
+          width: 100%; height: 100%; object-fit: cover; object-position: top center;
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 22%);
+          mask-image: linear-gradient(to right, transparent 0%, black 22%);
+        }
         .bulle { position: absolute; bottom: 10px; right: 10px; left: 10px; background: white; border-radius: 12px; padding: 12px 14px;
           box-shadow: 0 8px 20px -6px rgba(18,41,77,0.25); display: flex; flex-direction: column; gap: 3px; }
         .bulle strong { font-size: 12.5px; color: #12294D; }
