@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronRight, Pill } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
@@ -48,7 +48,7 @@ export default function Home() {
         </div>
 
         <div className="heroVisuel">
-          <Pill size={72} strokeWidth={1.1} />
+          <img src="/pharmacienne.jpg" alt="Pharmacienne partenaire" className="heroPhoto" />
         </div>
       </section>
 
@@ -135,7 +135,8 @@ export default function Home() {
         .btnSecondaire { background: white; color: #123D78; border: 2px solid #1668C7; }
 
         .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 18px; background: linear-gradient(135deg, rgba(17,65,120,0.06), rgba(77,25,126,0.09));
-          display: flex; align-items: center; justify-content: center; color: #6C88B0; }
+          display: flex; align-items: center; justify-content: center; color: #6C88B0; overflow: hidden; }
+        .heroPhoto { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
 
         .avantages { background: white; padding: 32px 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .avantage { text-align: center; }
