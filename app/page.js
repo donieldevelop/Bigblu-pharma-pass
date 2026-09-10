@@ -29,7 +29,7 @@ export default function Home() {
         <div className="heroText">
           <p className="eyebrow">BIG BLU PHARMA PASS</p>
           <h1 className="titre">
-            Le crédit médicament <span className="accent">de vos travailleurs,</span> réglé en pharmacie.
+            Le crédit <span className="accentBlue">médicament</span> de vos travailleurs, réglé en <span className="accentPurple">pharmacie</span>.
           </h1>
           <p className="paragraphe">
             Une solution simple, sécurisée et accessible pour prendre soin de la santé de ceux
@@ -95,7 +95,8 @@ export default function Home() {
         .heroText { flex: 1.15; min-width: 0; }
         .eyebrow { font-size: 10.5px; letter-spacing: 0.6px; color: #8393A8; margin: 0 0 8px; text-transform: uppercase; }
         .titre { font-size: 22px; line-height: 1.2; font-weight: 800; margin: 0 0 10px; }
-        .accent { color: #2E7BC4; }
+        .accentBlue { color: #2E7BC4; }
+        .accentPurple { color: #6C4FB3; }
         .paragraphe { font-size: 12.5px; color: #3E4C63; line-height: 1.5; margin: 0; }
 
         .heroVisuel { flex: 0.85; min-height: 260px; align-self: stretch; border-radius: 18px; overflow: hidden; position: relative;
