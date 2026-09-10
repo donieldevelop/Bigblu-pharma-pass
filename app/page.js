@@ -32,8 +32,8 @@ export default function Home() {
             Le crédit <span className="accentBlue">médicament</span> de vos travailleurs, réglé en <span className="accentPurple">pharmacie</span>.
           </h1>
           <p className="paragraphe">
-            Une solution simple, sécurisée et accessible pour prendre soin de la santé de ceux
-            qui font avancer votre entreprise.
+            Chaque travailleur abonné dispose d&apos;un plafond mensuel qu&apos;il utilise directement
+            chez une pharmacie partenaire, identifié par son QR Code personnel.
           </p>
         </div>
 
