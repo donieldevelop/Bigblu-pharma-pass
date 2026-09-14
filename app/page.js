@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
@@ -58,11 +57,6 @@ export default function Home() {
             <span>{a.titre}</span>
           </div>
         ))}
-      </section>
-
-      <section className="boutons">
-        <a href="/travailleur/login" className="btnPrimaire">Se connecter <ChevronRight size={18} /></a>
-        <a href="/travailleur/inscription" className="btnSecondaire">Créer un compte <ChevronRight size={18} /></a>
       </section>
 
       <section className="bas">
