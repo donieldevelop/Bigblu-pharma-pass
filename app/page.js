@@ -22,7 +22,10 @@ export default function Home() {
     <div className="page">
       <header className="header">
         <img src="/logo.png" alt="BIGBLU HOLDING AFRICA" className="logo" />
-        <span className="lang">FR ▾</span>
+        <nav className="headerNav">
+          <a href="/travailleur/login" className="headerLien">Se connecter</a>
+          <a href="/travailleur/inscription" className="headerLienPrimaire">S&apos;inscrire</a>
+        </nav>
       </header>
 
       <section className={`hero ${visible ? 'heroVisible' : ''}`}>
@@ -86,9 +89,11 @@ export default function Home() {
 
       <style jsx>{`
         .page { background: #EEF2F6; min-height: 100vh; color: #12294D; overflow-x: hidden; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
-        .logo { height: 40px; width: auto; }
-        .lang { font-size: 13px; font-weight: 600; color: #5B6B82; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 16px; }
+        .logo { height: 52px; width: auto; }
+        .headerNav { display: flex; align-items: center; gap: 10px; }
+        .headerLien { font-size: 12.5px; font-weight: 600; color: #12294D; text-decoration: none; }
+        .headerLienPrimaire { font-size: 12.5px; font-weight: 700; color: white; background: #12294D; padding: 8px 14px; border-radius: 8px; text-decoration: none; }
 
         .hero { position: relative; padding: 10px 0 16px 16px; display: flex; flex-direction: row; align-items: center; gap: 14px;
           opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
