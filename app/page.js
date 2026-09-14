@@ -79,7 +79,8 @@ export default function Home() {
           <p className="tagline">Des travailleurs en bonne santé, des entreprises plus fortes.</p>
         </div>
         <p className="proEspace">
-          Vous êtes une pharmacie partenaire ? <a href="/pharmacie/login">Accéder à votre espace</a>
+          Vous êtes une pharmacie partenaire ? <a href="/pharmacie/login">Se connecter</a> ·{' '}
+          <a href="/inscription-pharmacie">Inscrire ma pharmacie</a>
         </p>
       </section>
 
