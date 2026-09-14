@@ -41,7 +41,10 @@ export default function InscriptionTravailleurPage() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', background: '#EEF2F6' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', background: '#EEF2F6', flexDirection: 'column', gap: 16 }}>
+      <a href="/inscription-pharmacie" style={{ fontSize: 12.5, color: '#5B6B82', textDecoration: 'none' }}>
+        Espace partenaire (pharmacie) →
+      </a>
       <form onSubmit={handleSignup} style={{ background: 'white', padding: 32, borderRadius: 12, width: 340 }}>
         <h1 style={{ fontSize: 20, marginBottom: 20 }}>Créer mon compte</h1>
         <input placeholder="Prénom" value={prenom} onChange={(e) => setPrenom(e.target.value)} required style={inputStyle} />
