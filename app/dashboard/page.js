@@ -129,6 +129,21 @@ export default function DashboardPage() {
         >
           Notifications →
         </a>
+        <a
+          href="/dashboard/cartes"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Demandes de carte →
+        </a>
       </div>
     </div>
   );

@@ -42,6 +42,8 @@ export default function ProfilPage() {
           <div className="ligne"><Phone size={18} /><span>{profil?.telephone || '—'}</span></div>
         </div>
 
+        <a href="/travailleur/carte" className="lienCarte">Ma carte BIGBLU PHARMA PASS</a>
+
         <button onClick={logout} className="deconnexion">
           <LogOut size={18} /> Se déconnecter
         </button>
@@ -60,6 +62,7 @@ export default function ProfilPage() {
         .ligne { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #F0F2F5; color: #12294D; font-size: 14px; }
         .ligne:last-child { border-bottom: none; }
         .deconnexion { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: white; color: #B8324D; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .lienCarte { display: block; text-align: center; background: #12294D; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px; margin-bottom: 12px; }
       `}</style>
     </div>
   );
