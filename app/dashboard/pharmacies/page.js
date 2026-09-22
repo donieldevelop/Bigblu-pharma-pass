@@ -99,6 +99,12 @@ export default function PharmaciesPage() {
         <a href="/dashboard" style={{ fontSize: 14, color: '#1a3a6b' }}>← Tableau de bord</a>
       </div>
 
+      {error && (
+        <p style={{ color: '#c0392b', fontSize: 13, background: '#FBE7E9', padding: 10, borderRadius: 6, marginBottom: 16, maxWidth: 480 }}>
+          {error}
+        </p>
+      )}
+
       <form
         onSubmit={creerPharmacie}
         style={{ background: 'white', padding: 20, borderRadius: 8, marginBottom: 24, display: 'grid', gap: 10, maxWidth: 480 }}
