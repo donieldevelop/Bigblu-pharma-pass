@@ -3,29 +3,21 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabaseClient';
-import QrScanner from '../components/QrScanner';
+import QrCodeCanvas from '../components/QrCodeCanvas';
+import PharmacieBottomNav from '../components/PharmacieBottomNav';
+import { ScanLine, QrCode, Receipt, Wallet, LogOut } from 'lucide-react';
 
-export default function PharmacieDashboard() {
+export default function PharmacieAccueilPage() {
   const [session, setSession] = useState(null);
   const [pharmacie, setPharmacie] = useState(null);
   const [chargementPharmacie, setChargementPharmacie] = useState(true);
+  const [stats, setStats] = useState(null);
+  const [recentes, setRecentes] = useState([]);
   const [formNom, setFormNom] = useState('');
   const [formAdresse, setFormAdresse] = useState('');
   const [formLat, setFormLat] = useState('');
   const [formLng, setFormLng] = useState('');
   const [inscriptionEnCours, setInscriptionEnCours] = useState(false);
-  const [travailleurId, setTravailleurId] = useState('');
-  const [infoTravailleur, setInfoTravailleur] = useState(null);
-  const [transactionId, setTransactionId] = useState(null);
-  const [medicaments, setMedicaments] = useState([]);
-  const [dernierMedicamentId, setDernierMedicamentId] = useState(null);
-  const [moments, setMoments] = useState([]);
-  const [nom, setNom] = useState('');
-  const [quantite, setQuantite] = useState(1);
-  const [prix, setPrix] = useState('');
-  const [resultatValidation, setResultatValidation] = useState(null);
-  const [photoEnAnalyse, setPhotoEnAnalyse] = useState(false);
-  const [suggestionsIA, setSuggestionsIA] = useState([]);
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -36,8 +28,42 @@ export default function PharmacieDashboard() {
       const { data: p } = await supabase.from('pharmacies').select('*').eq('user_id', data.session.user.id).maybeSingle();
       setPharmacie(p);
       setChargementPharmacie(false);
+      if (p && p.statut === 'active') await chargerStats(p.id);
     });
   }, [router]);
+
+  async function chargerStats(pharmacieId) {
+    const debutJour = new Date();
+    debutJour.setHours(0, 0, 0, 0);
+
+    const [{ data: transactionsJour }, { data: dernieres }, { data: reglement }] = await Promise.all([
+      supabase
+        .from('transactions')
+        .select('id, montant_total, statut, travailleur_id')
+        .eq('pharmacie_id', pharmacieId)
+        .gte('created_at', debutJour.toISOString()),
+      supabase
+        .from('transactions')
+        .select('id, reference, montant_total, statut, created_at, utilisateurs(nom, prenom)')
+        .eq('pharmacie_id', pharmacieId)
+        .order('created_at', { ascending: false })
+        .limit(4),
+      supabase.from('vue_reglements_pharmacies').select('*').eq('pharmacie_id', pharmacieId).maybeSingle(),
+    ]);
+
+    const validees = (transactionsJour || []).filter((t) => t.statut === 'validee');
+    const travailleursUniques = new Set(validees.map((t) => t.travailleur_id));
+    const montantJour = validees.reduce((s, t) => s + Number(t.montant_total || 0), 0);
+
+    setStats({
+      travailleursServis: travailleursUniques.size,
+      montantJour,
+      transactionsValidees: validees.length,
+      montantEnAttente: reglement?.montant_en_attente || 0,
+      transactionsEnAttente: reglement?.transactions_en_attente || 0,
+    });
+    setRecentes(dernieres || []);
+  }
 
   function utiliserPosition() {
     navigator.geolocation.getCurrentPosition(
@@ -65,107 +91,6 @@ export default function PharmacieDashboard() {
     setPharmacie(p);
   }
 
-  async function identifier() {
-    setError('');
-    setResultatValidation(null);
-    const { data, error } = await supabase.rpc('identifier_travailleur_pour_transaction', {
-      p_travailleur_id: travailleurId,
-    });
-    if (error) return setError(error.message);
-    if (!data || data.length === 0) return setError('Travailleur introuvable ou non identifiable.');
-    setInfoTravailleur(data[0]);
-  }
-
-  async function creerTransaction() {
-    setError('');
-    const { data, error } = await supabase.rpc('creer_transaction', { p_travailleur_id: travailleurId });
-    if (error) return setError(error.message);
-    setTransactionId(data);
-    setMedicaments([]);
-  }
-
-  async function analyserPhoto(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    setPhotoEnAnalyse(true);
-    setError('');
-    setSuggestionsIA([]);
-
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
-    try {
-      const res = await fetch('/api/analyser-medicament', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image_base64: base64 }),
-      });
-      const data = await res.json();
-      if (data.erreur) {
-        setError(data.erreur);
-      } else {
-        setSuggestionsIA(data.medicaments || []);
-      }
-    } catch (err) {
-      setError("Erreur d'analyse : " + err.message);
-    }
-    setPhotoEnAnalyse(false);
-  }
-
-  function utiliserSuggestion(s) {
-    setNom(s.nom || '');
-    setQuantite(s.quantite || 1);
-    setPrix(s.prix_unitaire || '');
-  }
-
-  async function ajouterMedicament() {
-    setError('');
-    const { data, error } = await supabase.rpc('ajouter_medicament', {
-      p_transaction_id: transactionId,
-      p_nom: nom,
-      p_presentation: null,
-      p_quantite: parseInt(quantite, 10),
-      p_prix_unitaire: parseFloat(prix),
-    });
-    if (error) return setError(error.message);
-    setMedicaments([...medicaments, { nom, quantite, prix }]);
-    setDernierMedicamentId(data);
-    setMoments([]);
-    setNom('');
-    setQuantite(1);
-    setPrix('');
-  }
-
-  function toggleMoment(m) {
-    setMoments((prev) => (prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]));
-  }
-
-  async function enregistrerIndication() {
-    if (!dernierMedicamentId || moments.length === 0) return;
-    const { error } = await supabase.rpc('ajouter_indication', {
-      p_medicament_id: dernierMedicamentId,
-      p_moments_prise: moments,
-      p_frequence: null,
-      p_duree: null,
-      p_mode_administration: null,
-      p_note: null,
-    });
-    if (error) return setError(error.message);
-    setDernierMedicamentId(null);
-    setMoments([]);
-  }
-
-  async function valider() {
-    setError('');
-    const { data, error } = await supabase.rpc('valider_transaction', { p_transaction_id: transactionId });
-    if (error) return setError(error.message);
-    setResultatValidation(data);
-  }
-
   async function logout() {
     await supabase.auth.signOut();
     router.push('/pharmacie/login');
@@ -175,165 +100,167 @@ export default function PharmacieDashboard() {
 
   if (!pharmacie) {
     return (
-      <div style={{ padding: 32, maxWidth: 420, margin: '0 auto' }}>
-        <h1 style={{ fontSize: 20 }}>Inscrire ma pharmacie</h1>
-        <p style={{ fontSize: 13, color: '#888' }}>
+      <div className="ecranSeul">
+        <h1>Inscrire ma pharmacie</h1>
+        <p className="aide">
           Renseigne les informations de ta pharmacie. Un administrateur devra valider ta fiche
           avant que tu puisses effectuer des transactions.
         </p>
-        <form onSubmit={inscrirePharmacie} style={{ display: 'grid', gap: 10, marginTop: 16 }}>
-          <input placeholder="Nom de la pharmacie" value={formNom} onChange={(e) => setFormNom(e.target.value)} required style={{ padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
-          <input placeholder="Adresse" value={formAdresse} onChange={(e) => setFormAdresse(e.target.value)} required style={{ padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
-          <button type="button" onClick={utiliserPosition} style={{ padding: 10, borderRadius: 6, border: '1px dashed #999', background: 'white', cursor: 'pointer', fontSize: 13 }}>
-            📍 Utiliser ma position actuelle
-          </button>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <input placeholder="Latitude" value={formLat} onChange={(e) => setFormLat(e.target.value)} required style={{ flex: 1, padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
-            <input placeholder="Longitude" value={formLng} onChange={(e) => setFormLng(e.target.value)} required style={{ flex: 1, padding: 10, borderRadius: 6, border: '1px solid #ddd' }} />
+        <form onSubmit={inscrirePharmacie} className="formSeul">
+          <input placeholder="Nom de la pharmacie" value={formNom} onChange={(e) => setFormNom(e.target.value)} required className="input" />
+          <input placeholder="Adresse" value={formAdresse} onChange={(e) => setFormAdresse(e.target.value)} required className="input" />
+          <button type="button" onClick={utiliserPosition} className="btnPosition">📍 Utiliser ma position actuelle</button>
+          <div className="ligneLatLng">
+            <input placeholder="Latitude" value={formLat} onChange={(e) => setFormLat(e.target.value)} required className="input" />
+            <input placeholder="Longitude" value={formLng} onChange={(e) => setFormLng(e.target.value)} required className="input" />
           </div>
-          {error && <p style={{ color: '#c0392b', fontSize: 13 }}>{error}</p>}
-          <button type="submit" disabled={inscriptionEnCours} style={btnStyle}>
+          {error && <p className="erreur">{error}</p>}
+          <button type="submit" disabled={inscriptionEnCours} className="btnPrincipal">
             {inscriptionEnCours ? 'Envoi...' : 'Soumettre pour validation'}
           </button>
         </form>
+        <style jsx>{`
+          .ecranSeul { padding: 32px 20px; max-width: 420px; margin: 0 auto; font-family: var(--font-body), sans-serif; }
+          h1 { font-family: var(--font-display), sans-serif; font-size: 20px; color: #12294D; }
+          .aide { font-size: 13px; color: #8393A8; }
+          .formSeul { display: grid; gap: 10px; margin-top: 16px; }
+          .input { padding: 10px; border-radius: 8px; border: 1px solid #E4E9F0; font-size: 13px; }
+          .btnPosition { padding: 10px; border-radius: 8px; border: 1px dashed #8393A8; background: white; cursor: pointer; font-size: 13px; }
+          .ligneLatLng { display: flex; gap: 8px; }
+          .ligneLatLng .input { flex: 1; }
+          .erreur { color: #B8324D; font-size: 13px; }
+          .btnPrincipal { padding: 12px; border-radius: 8px; border: none; background: #12294D; color: white; font-weight: 600; cursor: pointer; }
+        `}</style>
       </div>
     );
   }
 
   if (pharmacie.statut !== 'active') {
     return (
-      <div style={{ padding: 32, maxWidth: 420, margin: '80px auto', textAlign: 'center' }}>
+      <div className="ecranSeul centre">
         <h2>Fiche en attente de validation</h2>
-        <p style={{ color: '#888' }}>
+        <p className="aide">
           La fiche de <strong>{pharmacie.nom}</strong> a été soumise et attend la validation de
           l&apos;administration. Reviens un peu plus tard.
         </p>
+        <style jsx>{`
+          .ecranSeul { padding: 32px 20px; max-width: 420px; margin: 80px auto 0; font-family: var(--font-body), sans-serif; }
+          .centre { text-align: center; }
+          h2 { font-family: var(--font-display), sans-serif; color: #12294D; }
+          .aide { color: #8393A8; font-size: 13.5px; }
+        `}</style>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: 32, maxWidth: 560, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <h1 style={{ fontSize: 20 }}>Espace Pharmacie</h1>
-        <button onClick={logout} style={{ border: 'none', background: 'none', color: '#1a3a6b', cursor: 'pointer' }}>Déconnexion</button>
+    <div className="ecran">
+      <div className="entete">
+        <div className="marque">
+          <img src="/logo.png" alt="BIGBLU" className="logo" />
+          <div>
+            <strong>{pharmacie.nom}</strong>
+            <span>{pharmacie.adresse}</span>
+          </div>
+        </div>
+        <button onClick={logout} className="deconnexion"><LogOut size={16} /></button>
       </div>
 
-      {error && <p style={{ color: '#c0392b' }}>{error}</p>}
-
-      {!transactionId && (
-        <div style={{ background: 'white', padding: 20, borderRadius: 8, marginTop: 16 }}>
-          <h3 style={{ marginTop: 0 }}>1. Identifier le travailleur</h3>
-          <p style={{ fontSize: 12, color: '#888' }}>
-            Scanne le QR Code du travailleur avec la caméra, ou colle son identifiant manuellement.
-          </p>
-          <div style={{ marginBottom: 12 }}>
-            <QrScanner onResult={(valeur) => setTravailleurId(valeur)} />
-          </div>
-          <input
-            placeholder="UID du travailleur"
-            value={travailleurId}
-            onChange={(e) => setTravailleurId(e.target.value)}
-            style={{ width: '100%', padding: 10, borderRadius: 6, border: '1px solid #ddd', marginBottom: 8 }}
-          />
-          <button onClick={identifier} style={btnStyle}>Identifier</button>
-
-          {infoTravailleur && (
-            <div style={{ marginTop: 12, fontSize: 14 }}>
-              <p><strong>{infoTravailleur.prenom} {infoTravailleur.nom}</strong></p>
-              <p>Compte : {infoTravailleur.statut_compte} — Abonnement : {infoTravailleur.statut_abonnement || 'aucun'}</p>
-              <p>Crédit disponible : {infoTravailleur.credit_disponible} FCFA</p>
-              <button onClick={creerTransaction} style={btnStyle}>Démarrer une transaction</button>
+      {stats && (
+        <div className="hero">
+          <span className="dateHero">Aujourd&apos;hui, {new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}</span>
+          <div className="statsHero">
+            <div>
+              <strong>{stats.travailleursServis}</strong>
+              <span>Travailleurs servis</span>
             </div>
-          )}
+            <div>
+              <strong>{stats.montantJour.toLocaleString('fr-FR')} F</strong>
+              <span>Montant total</span>
+            </div>
+            <div>
+              <strong>{stats.transactionsValidees}</strong>
+              <span>Validées</span>
+            </div>
+          </div>
         </div>
       )}
 
-      {transactionId && !resultatValidation && (
-        <div style={{ background: 'white', padding: 20, borderRadius: 8, marginTop: 16 }}>
-          <h3 style={{ marginTop: 0 }}>2. Ajouter les médicaments</h3>
+      <div className="actions">
+        <a href="/pharmacie/scanner" className="actionCard">
+          <ScanLine size={22} color="#12294D" />
+          <span>Scanner un travailleur</span>
+        </a>
+        <a href="/pharmacie/qrcode" className="actionCard">
+          <QrCode size={22} color="#6C4FB3" />
+          <span>Mon QR Code</span>
+        </a>
+        <a href="/pharmacie/transactions" className="actionCard">
+          <Receipt size={22} color="#2E7BC4" />
+          <span>Transactions</span>
+        </a>
+        <div className="actionCard reglement">
+          <Wallet size={22} color="#D98E3B" />
+          <span>{(stats?.montantEnAttente || 0).toLocaleString('fr-FR')} F en attente</span>
+        </div>
+      </div>
 
-          <label style={{ display: 'inline-block', marginBottom: 12, padding: '8px 14px', borderRadius: 6, border: '1px dashed #999', fontSize: 13, cursor: 'pointer' }}>
-            📷 Prendre une photo (lecture automatique)
-            <input type="file" accept="image/*" capture="environment" onChange={analyserPhoto} style={{ display: 'none' }} />
-          </label>
-
-          {photoEnAnalyse && <p style={{ fontSize: 13, color: '#888' }}>Analyse de la photo en cours...</p>}
-
-          {suggestionsIA.length > 0 && (
-            <div style={{ background: '#f5f6f8', padding: 10, borderRadius: 6, marginBottom: 12 }}>
-              <p style={{ fontSize: 12, margin: '0 0 8px' }}>Détecté par l&apos;IA (vérifie avant d&apos;ajouter) :</p>
-              {suggestionsIA.map((s, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, padding: '4px 0' }}>
-                  <span>{s.nom || '?'} — {s.quantite ?? '?'} × {s.prix_unitaire ?? '?'} FCFA</span>
-                  <button onClick={() => utiliserSuggestion(s)} style={{ fontSize: 12, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}>
-                    Utiliser
-                  </button>
+      <div className="section">
+        <h2>Dernières transactions</h2>
+        {recentes.length === 0 ? (
+          <p className="vide">Aucune transaction pour le moment.</p>
+        ) : (
+          <div className="liste">
+            {recentes.map((t) => (
+              <div key={t.id} className="ligne">
+                <div>
+                  <strong>{t.utilisateurs?.prenom} {t.utilisateurs?.nom}</strong>
+                  <span>{new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
                 </div>
-              ))}
-            </div>
-          )}
-
-          <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-            <input placeholder="Nom" value={nom} onChange={(e) => setNom(e.target.value)} style={{ flex: 2, padding: 8, borderRadius: 6, border: '1px solid #ddd' }} />
-            <input type="number" placeholder="Qté" value={quantite} onChange={(e) => setQuantite(e.target.value)} style={{ flex: 1, padding: 8, borderRadius: 6, border: '1px solid #ddd' }} />
-            <input type="number" placeholder="Prix unit." value={prix} onChange={(e) => setPrix(e.target.value)} style={{ flex: 1, padding: 8, borderRadius: 6, border: '1px solid #ddd' }} />
-          </div>
-          <button onClick={ajouterMedicament} style={btnStyle}>Ajouter</button>
-
-          <ul>
-            {medicaments.map((m, i) => (
-              <li key={i}>{m.nom} — {m.quantite} × {m.prix} FCFA</li>
+                <div className="droite">
+                  <span className="montant">{Number(t.montant_total).toLocaleString('fr-FR')} F</span>
+                  <span className={'badge badge-' + t.statut}>{t.statut}</span>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
+        )}
+      </div>
 
-          {dernierMedicamentId && (
-            <div style={{ background: '#f5f6f8', padding: 12, borderRadius: 6, marginBottom: 12 }}>
-              <p style={{ fontSize: 13, margin: '0 0 8px' }}>Indications (facultatif) pour le dernier médicament ajouté :</p>
-              {['matin', 'midi', 'soir'].map((m) => (
-                <label key={m} style={{ marginRight: 12, fontSize: 13 }}>
-                  <input type="checkbox" checked={moments.includes(m)} onChange={() => toggleMoment(m)} /> {m}
-                </label>
-              ))}
-              <button onClick={enregistrerIndication} style={{ ...btnStyle, marginLeft: 12, padding: '4px 10px', fontSize: 12 }}>
-                Enregistrer
-              </button>
-            </div>
-          )}
+      <PharmacieBottomNav actif="accueil" />
 
-          {medicaments.length > 0 && (
-            <button onClick={valider} style={{ ...btnStyle, background: '#0e7c3f', marginTop: 12 }}>
-              Valider la transaction
-            </button>
-          )}
-        </div>
-      )}
+      <style jsx>{`
+        .ecran { background: #EEF2F6; min-height: 100vh; font-family: var(--font-body), sans-serif; padding-bottom: 100px; }
+        .entete { max-width: 480px; margin: 0 auto; padding: 20px 20px 0; display: flex; justify-content: space-between; align-items: center; }
+        .marque { display: flex; align-items: center; gap: 10px; }
+        .logo { width: 34px; height: 34px; object-fit: contain; }
+        .marque strong { display: block; color: #12294D; font-family: var(--font-display), sans-serif; font-size: 15px; }
+        .marque span { display: block; color: #8393A8; font-size: 11.5px; }
+        .deconnexion { background: none; border: none; color: #B8324D; cursor: pointer; }
 
-      {resultatValidation && (
-        <div style={{ background: 'white', padding: 20, borderRadius: 8, marginTop: 16 }}>
-          {resultatValidation.succes ? (
-            <>
-              <h3 style={{ color: '#0e7c3f' }}>Transaction validée ✓</h3>
-              <p>Reçu : {resultatValidation.reference}</p>
-            </>
-          ) : (
-            <h3 style={{ color: '#c0392b' }}>Refusée : {resultatValidation.raison}</h3>
-          )}
-          <button
-            onClick={() => {
-              setTransactionId(null);
-              setInfoTravailleur(null);
-              setTravailleurId('');
-              setResultatValidation(null);
-            }}
-            style={btnStyle}
-          >
-            Nouvelle transaction
-          </button>
-        </div>
-      )}
+        .hero { max-width: 480px; margin: 16px auto 0; background: #0B1B33; border-radius: 16px; padding: 20px; color: white; }
+        .dateHero { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .statsHero { display: flex; justify-content: space-between; margin-top: 12px; }
+        .statsHero strong { display: block; font-family: var(--font-display), sans-serif; font-size: 19px; color: #F0C48A; }
+        .statsHero span { display: block; font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+        .actions { max-width: 480px; margin: 16px auto 0; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .actionCard { background: white; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; font-size: 12.5px; color: #12294D; font-weight: 600; }
+        .actionCard.reglement { background: #FBEBD3; }
+
+        .section { max-width: 480px; margin: 22px auto 0; padding: 0 20px; }
+        .section h2 { font-family: var(--font-display), sans-serif; font-size: 15px; color: #12294D; margin: 0 0 10px; }
+        .vide { color: #8393A8; font-size: 13px; }
+        .liste { display: flex; flex-direction: column; gap: 8px; }
+        .ligne { background: white; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .ligne strong { display: block; color: #12294D; font-size: 13.5px; }
+        .ligne span { font-size: 11.5px; color: #8393A8; }
+        .droite { text-align: right; }
+        .montant { display: block; font-size: 13px; color: #12294D; font-weight: 600; }
+        .badge { display: inline-block; margin-top: 3px; font-size: 10px; padding: 2px 7px; border-radius: 5px; background: #F0F2F5; color: #5B6B82; text-transform: capitalize; }
+        .badge-validee { background: #E4F5EA; color: #0E7C3F; }
+        .badge-refusee { background: #FBE7E9; color: #B8324D; }
+      `}</style>
     </div>
   );
 }
-
-const btnStyle = { padding: '10px 16px', borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' };
