@@ -144,6 +144,21 @@ export default function DashboardPage() {
         >
           Demandes de carte →
         </a>
+        <a
+          href="/dashboard/agents"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: 8,
+            background: 'white',
+            border: '1px solid #ddd',
+            textDecoration: 'none',
+            color: '#1a3a6b',
+            fontWeight: 600,
+          }}
+        >
+          Agents commerciaux →
+        </a>
       </div>
     </div>
   );
