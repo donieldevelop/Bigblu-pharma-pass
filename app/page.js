@@ -69,7 +69,7 @@ export default function Home() {
             <div className="passCardCaption">Plafond mensuel</div>
             <div className="passCardAmount">30 000 FCFA</div>
             <div className="passCardFooter">
-              <span>Abonnement : 1 500 F/mois</span>
+              <span>Abonnement : 2 000 F/mois</span>
               <span>BIG HOLDING SA</span>
             </div>
           </div>

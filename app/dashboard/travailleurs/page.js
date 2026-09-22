@@ -48,7 +48,7 @@ export default function TravailleursPage() {
       </div>
 
       <p style={{ color: '#888', fontSize: 13, marginBottom: 16 }}>
-        Abonnement : 1 500 FCFA/mois — Plafond crédit : 30 000 FCFA/mois. En attendant l'intégration du
+        Abonnement : 2 000 FCFA/mois — Plafond crédit : 30 000 FCFA/mois. En attendant l'intégration du
         paiement (dernière phase), l'activation se fait manuellement ici.
       </p>
 
