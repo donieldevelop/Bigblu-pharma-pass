@@ -9,13 +9,15 @@ export default function ScannerPage() {
   const [pharmacie, setPharmacie] = useState(null);
   const [erreur, setErreur] = useState('');
   const [scanFait, setScanFait] = useState(false);
+  const [signalementEnCours, setSignalementEnCours] = useState(false);
+  const [signale, setSignale] = useState(false);
 
   async function surResultat(valeur) {
     setScanFait(true);
     setErreur('');
     const { data, error } = await supabase
       .from('pharmacies')
-      .select('nom, adresse, statut')
+      .select('id, nom, adresse, statut')
       .eq('qr_code_id', valeur)
       .maybeSingle();
     if (error || !data) {
@@ -23,6 +25,13 @@ export default function ScannerPage() {
       return;
     }
     setPharmacie(data);
+
+    setSignalementEnCours(true);
+    const { error: erreurSignalement } = await supabase.rpc('travailleur_signaler_presence', {
+      p_pharmacie_id: data.id,
+    });
+    setSignalementEnCours(false);
+    if (!erreurSignalement) setSignale(true);
   }
 
   return (
@@ -46,6 +55,8 @@ export default function ScannerPage() {
             <strong>{pharmacie.nom}</strong>
             <p>{pharmacie.adresse}</p>
           </div>
+          {signalementEnCours && <p className="statutSignalement">Signalement à la pharmacie...</p>}
+          {signale && <p className="statutSignaleOk">Tu es signalé à la pharmacie ✓ Le pharmacien va te prendre en charge.</p>}
           <a href="/travailleur/qrcode" className="bouton">Afficher mon QR Code pour payer</a>
         </div>
       )}
@@ -60,6 +71,8 @@ export default function ScannerPage() {
         .resultat { background: white; border-radius: 14px; padding: 20px; margin-top: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .resultat strong { color: #12294D; }
         .resultat p { font-size: 13px; color: #5B6B82; margin: 0; }
+        .statutSignalement { color: #8393A8 !important; font-size: 12.5px !important; }
+        .statutSignaleOk { color: #0E7C3F !important; font-size: 12.5px !important; font-weight: 600; }
         .bouton { margin-top: 12px; background: #12294D; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; }
       `}</style>
     </div>

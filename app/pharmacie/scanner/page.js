@@ -9,6 +9,8 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function ScannerPharmaciePage() {
   const [session, setSession] = useState(null);
+  const [pharmacieId, setPharmacieId] = useState(null);
+  const [fileAttente, setFileAttente] = useState([]);
   const [travailleurId, setTravailleurId] = useState('');
   const [infoTravailleur, setInfoTravailleur] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
@@ -25,21 +27,55 @@ export default function ScannerPharmaciePage() {
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) return router.push('/pharmacie/login');
       setSession(data.session);
+      const { data: p } = await supabase.from('pharmacies').select('id').eq('user_id', data.session.user.id).maybeSingle();
+      if (p) {
+        setPharmacieId(p.id);
+        await chargerFileAttente(p.id);
+      }
     });
   }, [router]);
 
-  async function identifier() {
+  useEffect(() => {
+    if (!pharmacieId) return;
+    const intervalle = setInterval(() => chargerFileAttente(pharmacieId), 8000);
+    return () => clearInterval(intervalle);
+  }, [pharmacieId]);
+
+  async function chargerFileAttente(id) {
+    const { data } = await supabase
+      .from('presences_pharmacie')
+      .select('id, created_at, utilisateurs(id, nom, prenom)')
+      .eq('pharmacie_id', id)
+      .eq('statut', 'en_attente')
+      .order('created_at', { ascending: true });
+    setFileAttente(data || []);
+  }
+
+  async function prendreEnCharge(presenceId, travId) {
+    setError('');
+    const { error } = await supabase.rpc('pharmacie_prendre_en_charge', { p_presence_id: presenceId });
+    if (error) return setError(error.message);
+    setTravailleurId(travId);
+    if (pharmacieId) await chargerFileAttente(pharmacieId);
+    await identifierId(travId);
+  }
+
+  async function identifierId(id) {
     setError('');
     setResultatValidation(null);
     const { data, error } = await supabase.rpc('identifier_travailleur_pour_transaction', {
-      p_travailleur_id: travailleurId,
+      p_travailleur_id: id,
     });
     if (error) return setError(error.message);
     if (!data || data.length === 0) return setError('Travailleur introuvable ou non identifiable.');
     setInfoTravailleur(data[0]);
+  }
+
+  async function identifier() {
+    await identifierId(travailleurId);
   }
 
   async function creerTransaction() {
@@ -137,6 +173,7 @@ export default function ScannerPharmaciePage() {
     setInfoTravailleur(null);
     setTravailleurId('');
     setResultatValidation(null);
+    if (pharmacieId) chargerFileAttente(pharmacieId);
   }
 
   if (!session) return null;
@@ -151,6 +188,19 @@ export default function ScannerPharmaciePage() {
 
         {!transactionId && (
           <div className="carte">
+            {fileAttente.length > 0 && (
+              <div className="fileAttente">
+                <h3>File d&apos;attente ({fileAttente.length})</h3>
+                <p className="aide">Travailleurs qui se sont signalés en scannant ton QR Code.</p>
+                {fileAttente.map((p) => (
+                  <div key={p.id} className="ligneAttente">
+                    <span>{p.utilisateurs?.prenom} {p.utilisateurs?.nom}</span>
+                    <button onClick={() => prendreEnCharge(p.id, p.utilisateurs?.id)} className="btnMini">Prendre en charge</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <h3>1. Identifier le travailleur</h3>
             <p className="aide">Scanne le QR Code du travailleur, ou colle son identifiant manuellement.</p>
             <div className="scannerWrap"><QrScanner onResult={(valeur) => setTravailleurId(valeur)} /></div>
@@ -254,6 +304,9 @@ export default function ScannerPharmaciePage() {
         .erreur { color: #B8324D; font-size: 13px; background: #FBE7E9; padding: 10px; border-radius: 8px; }
         .carte { background: white; padding: 20px; border-radius: 14px; margin-top: 14px; }
         .carte h3 { margin-top: 0; font-size: 15px; color: #12294D; }
+        .fileAttente { background: #FBEBD3; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+        .fileAttente h3 { margin: 0 0 4px; font-size: 14px; }
+        .ligneAttente { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; color: #12294D; }
         .aide { font-size: 12px; color: #8393A8; }
         .scannerWrap { margin-bottom: 12px; }
         .input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #E4E9F0; margin-bottom: 8px; font-size: 13px; box-sizing: border-box; }
