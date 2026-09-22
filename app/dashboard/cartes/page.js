@@ -17,7 +17,7 @@ export default function CartesAdminPage() {
     if (!s.session) return router.push('/login');
     const { data, error } = await supabase
       .from('cartes_travailleur')
-      .select('id, entreprise, photo_url, matricule, statut, demandee_le, utilisateurs(nom, prenom, email)')
+      .select('id, entreprise, photo_url, matricule, statut, demandee_le, date_expiration, utilisateurs(nom, prenom, email)')
       .order('demandee_le', { ascending: false });
     if (error) setError(error.message);
     setRows(data || []);
@@ -49,11 +49,11 @@ export default function CartesAdminPage() {
   return (
     <div style={{ padding: 32 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h1 style={{ fontSize: 22 }}>Demandes de carte</h1>
+        <h1 style={{ fontSize: 22 }}>File d&apos;impression des cartes</h1>
         <a href="/dashboard" style={{ fontSize: 14, color: '#1a3a6b' }}>← Tableau de bord</a>
       </div>
       <p style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>
-        Indépendant de l&apos;abonnement — concerne uniquement la carte physique imprimée à remettre au bureau.
+        La carte numérique du travailleur est déjà active dès sa demande. Cette page gère uniquement la logistique d&apos;impression et de remise de la carte physique.
       </p>
 
       {error && <p style={{ color: '#c0392b' }}>{error}</p>}
@@ -71,6 +71,7 @@ export default function CartesAdminPage() {
                 <p style={{ fontSize: 12, color: '#888', margin: '2px 0' }}>{c.entreprise}</p>
                 <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
                   {c.matricule ? `Matricule : ${c.matricule}` : 'Matricule : —'} · {libelle[c.statut]}
+                  {c.date_expiration ? ` · Expire le ${new Date(c.date_expiration).toLocaleDateString('fr-FR')}` : ''}
                 </p>
               </div>
               {c.statut === 'en_attente' && (

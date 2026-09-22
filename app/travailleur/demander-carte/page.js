@@ -98,9 +98,9 @@ export default function DemanderCartePage() {
       <div className="ecran">
         <div className="confirmation">
           <Check size={40} color="#0E7C3F" />
-          <h2>Demande envoyée</h2>
-          <p>Ta demande de carte est en cours de traitement. Tu seras notifié dès qu&apos;elle sera prête à récupérer.</p>
-          <a href="/travailleur/profil" className="btn">Retour au profil</a>
+          <h2>Ta carte est prête</h2>
+          <p>Ta carte BIGBLU PHARMA PASS est disponible dès maintenant dans l&apos;app. La version physique est en cours d&apos;impression — tu seras notifié dès qu&apos;elle sera prête à récupérer au bureau.</p>
+          <a href="/travailleur/carte" className="btn">Voir ma carte</a>
         </div>
         <style jsx>{`
           .ecran { background: #EEF2F6; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -118,7 +118,7 @@ export default function DemanderCartePage() {
       <div className="contenu">
         <a href="/travailleur/profil" className="retour"><ArrowLeft size={18} /> Retour</a>
         <h1 className="titre">Demander ma carte</h1>
-        <p className="sous">Cette carte physique est indépendante de ton abonnement — elle te sera remise en main propre au bureau.</p>
+        <p className="sous">Dès l&apos;envoi, ta carte numérique est utilisable immédiatement dans l&apos;app. La carte physique, elle, te sera remise en main propre au bureau une fois imprimée.</p>
 
         <form onSubmit={soumettre}>
           <label className="label">Nom de ton entreprise</label>

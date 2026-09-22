@@ -50,22 +50,33 @@ export default function MaCartePage() {
     );
   }
 
-  if (carte.statut === 'en_attente') {
+  const expiree = carte.date_expiration && new Date(carte.date_expiration) < new Date();
+
+  if (expiree) {
     return (
       <div className="ecran">
         <div className="vide">
           <a href="/travailleur/profil" className="retour"><ArrowLeft size={18} /> Retour</a>
-          <p>Ta demande de carte est en cours de traitement. Tu seras notifié dès qu&apos;elle sera prête.</p>
+          <p>Ta carte a expire (validite 2 ans). Refais ta demande pour obtenir une nouvelle carte.</p>
+          <a href="/travailleur/demander-carte" className="btn">Renouveler ma carte</a>
         </div>
         <style jsx>{`
           .ecran { background: #EEF2F6; min-height: 100vh; padding: 20px; }
           .vide { max-width: 380px; margin: 60px auto 0; text-align: center; }
           .retour { display: inline-flex; align-items: center; gap: 6px; color: #5B6B82; text-decoration: none; font-size: 13px; }
           .vide p { color: #5B6B82; margin: 20px 0; line-height: 1.6; }
+          .btn { background: #12294D; color: white; padding: 12px 22px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; }
         `}</style>
       </div>
     );
   }
+
+  const libelleStatutPhysique = {
+    en_attente: 'Carte physique : en file d\'impression',
+    disponible: 'Carte physique prete - a recuperer au bureau',
+    recuperee: 'Carte physique recuperee',
+    refusee: 'Carte physique refusee',
+  }[carte.statut];
 
   return (
     <div className="ecran">
@@ -108,6 +119,12 @@ export default function MaCartePage() {
           <li>Elle donne accès à votre crédit médicament.</li>
           <li>En cas de perte, contactez le service client.</li>
         </ul>
+        {carte.date_expiration && (
+          <p className="versoExpiration">Valable jusqu&apos;au {new Date(carte.date_expiration).toLocaleDateString('fr-FR')}</p>
+        )}
+        {libelleStatutPhysique && (
+          <p className="versoStatutPhysique">{libelleStatutPhysique}</p>
+        )}
       </div>
 
       <style jsx>{`
@@ -131,6 +148,8 @@ export default function MaCartePage() {
         .logoVerso { height: 32px; filter: brightness(0) invert(1); margin-bottom: 14px; }
         .verso1 { font-weight: 700; font-size: 13px; margin: 0 0 10px; }
         .versoListe { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.7; opacity: 0.9; }
+        .versoExpiration { margin: 14px 0 0; font-size: 11.5px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; }
+        .versoStatutPhysique { margin: 6px 0 0; font-size: 11.5px; opacity: 0.85; }
       `}</style>
     </div>
   );
