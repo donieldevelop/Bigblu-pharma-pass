@@ -75,10 +75,6 @@ export default function Home() {
           </div>
           <p className="tagline">Des travailleurs en bonne santé, des entreprises plus fortes.</p>
         </div>
-        <p className="proEspace">
-          Vous êtes une pharmacie partenaire ? <a href="/pharmacie/login">Se connecter</a> ·{' '}
-          <a href="/inscription-pharmacie">Inscrire ma pharmacie</a>
-        </p>
       </section>
 
       <style jsx>{`
@@ -132,8 +128,6 @@ export default function Home() {
         .passCardAmount { font-size: 24px; font-weight: 700; margin-bottom: 16px; }
         .passCardFooter { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.75; gap: 8px; }
         .tagline { color: white; font-size: 16px; font-weight: 600; text-align: center; margin: 0; }
-        .proEspace { text-align: center; font-size: 12px; color: rgba(255,255,255,0.6); margin: 24px 0 0; }
-        .proEspace a { color: white; font-weight: 600; text-decoration: underline; }
 
         @media (min-width: 720px) {
           .header { padding: 24px 40px; }
