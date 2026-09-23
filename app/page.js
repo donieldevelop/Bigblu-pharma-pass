@@ -43,7 +43,7 @@ export default function Home() {
               <a className="btn btn-outline" href="#fonctionnement">Découvrir</a>
             </div>
           </div>
-          <div className="hero-media">
+          <div className="hero-media media-fade">
             <img src="/v3-hero.jpg" alt="Pharmacienne présentant l'application BIGBLU PHARMA PASS" />
           </div>
         </section>
@@ -81,7 +81,7 @@ export default function Home() {
             <strong>Abonnement : 2 000 F/mois</strong>
             <a className="btn btn-light" href="/travailleur/inscription">Obtenir mon Pass</a>
           </div>
-          <div className="pass-media">
+          <div className="pass-media media-fade">
             <img src="/v3-pass.jpg" alt="Pass BIGBLU" />
           </div>
         </section>
@@ -93,7 +93,9 @@ export default function Home() {
             <p>Trouvez la pharmacie la plus proche de vous et profitez de vos services santé.</p>
             <a className="btn btn-primary" href="/travailleur/login">Voir les pharmacies</a>
           </div>
-          <img src="/v3-pharmacie.jpg" alt="Pharmacie partenaire BIGBLU" />
+          <div className="media-fade pharmacyImg">
+            <img src="/v3-pharmacie.jpg" alt="Pharmacie partenaire BIGBLU" />
+          </div>
         </section>
 
         <section id="apropos" className="join-section section">
@@ -103,7 +105,9 @@ export default function Home() {
             <p>Une solution santé simple, sécurisée et dédiée aux travailleurs.</p>
             <a className="btn btn-primary" href="/travailleur/inscription">S&apos;inscrire maintenant</a>
           </div>
-          <img src="/v3-equipe.jpg" alt="Travailleurs et professionnels" />
+          <div className="media-fade joinImg">
+            <img src="/v3-equipe.jpg" alt="Travailleurs et professionnels" />
+          </div>
         </section>
       </main>
 
@@ -167,7 +171,14 @@ export default function Home() {
         .pharmacy-section, .join-section { display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: stretch; margin-top: 16px; overflow: hidden; border-radius: 20px; background: #f4f9ff; }
         .pharmacy-copy, .join-copy { padding: 16px 12px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
         .pharmacy-section h2, .join-copy h2 { font-size: 15px; margin: 0; color: #082c72; line-height: 1.2; }
-        .pharmacy-section img, .join-section img { width: 100%; height: 100%; min-height: 150px; object-fit: cover; display: block; }
+        .media-fade { position: relative; }
+        .media-fade::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+        .hero-media::before { background: linear-gradient(to right, #f3f8ff 0%, rgba(243,248,255,0) 22%); }
+        .pass-media::before { background: linear-gradient(to right, #062e78 0%, rgba(6,46,120,0) 22%); }
+        .pharmacyImg::before { background: linear-gradient(to right, #f4f9ff 0%, rgba(244,249,255,0) 22%); }
+        .joinImg::before { background: linear-gradient(to right, #f4f9ff 0%, rgba(244,249,255,0) 22%); }
+        .pharmacyImg, .joinImg { position: relative; }
+        .pharmacyImg img, .joinImg img { width: 100%; height: 100%; min-height: 150px; object-fit: cover; display: block; }
         .pharmacy-copy p:not(.eyebrow), .join-copy p:not(.eyebrow) { font-size: 10.5px; line-height: 1.35; color: #486283; margin: 6px 0 10px; }
 
         .footer { margin-top: 50px; padding: 35px 5%; display: flex; flex-direction: column; gap: 15px; align-items: center; justify-content: space-between; background: #062e78; color: #fff; text-align: center; }
@@ -214,7 +225,7 @@ export default function Home() {
           .pharmacy-section, .join-section { grid-template-columns: 45% 55%; }
           .pharmacy-copy, .join-copy { padding: 48px; }
           .pharmacy-section h2, .join-copy h2 { font-size: 34px; }
-          .pharmacy-section img, .join-section img { height: 100%; min-height: 300px; }
+          .pharmacyImg img, .joinImg img { height: 100%; min-height: 300px; }
           .pharmacy-copy p:not(.eyebrow), .join-copy p:not(.eyebrow) { font-size: 17px; }
 
           .footer { flex-direction: row; text-align: left; }
