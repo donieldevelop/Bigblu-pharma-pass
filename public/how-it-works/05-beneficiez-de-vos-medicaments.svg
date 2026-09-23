@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+<rect width="300" height="300" rx="28" fill="#F7FAFE"/>
+<circle cx="38" cy="38" r="24" fill="#0B5ED7"/><text x="38" y="46" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">5</text>
+<rect x="108" y="75" width="84" height="84" rx="12" fill="#F4F7FB" stroke="#0B5ED7" stroke-width="5"/><path d="M150 91v52M124 117h52" stroke="#0B5ED7" stroke-width="12" stroke-linecap="round"/>
+<text x="150" y="205" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#142F55">Bénéficiez de vos médicaments</text>
+<text x="150" y="233" text-anchor="middle" font-family="Arial" font-size="12" fill="#52677F">Votre prise en charge est enregistrée</text>
+</svg>

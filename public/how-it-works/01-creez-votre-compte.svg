@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+<rect width="300" height="300" rx="28" fill="#F7FAFE"/>
+<circle cx="38" cy="38" r="24" fill="#0B5ED7"/><text x="38" y="46" text-anchor="middle" font-family="Arial" font-size="22" font-weight="700" fill="white">1</text>
+<circle cx="150" cy="105" r="30" fill="#0B5ED7"/><circle cx="150" cy="91" r="11" fill="white"/><path d="M125 128c8-18 42-18 50 0" fill="none" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<text x="150" y="205" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#142F55">Créez votre compte</text>
+<text x="150" y="233" text-anchor="middle" font-family="Arial" font-size="12" fill="#52677F">Création simple du compte travailleur</text>
+</svg>
