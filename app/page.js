@@ -154,21 +154,21 @@ export default function Home() {
         .step span { position: absolute; z-index: 2; left: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%; background: #0868ee; color: #fff; display: grid; place-items: center; font-weight: 800; border: 3px solid #fff; font-size: 13px; }
         .step h3 { font-size: 13.5px; line-height: 1.25; margin: 12px 5px; color: #082c72; }
 
-        .pass-section { display: grid; grid-template-columns: 1fr; background: #062e78; border-radius: 28px; overflow: hidden; color: #fff; min-height: auto; }
-        .pass-copy { padding: 32px; }
-        .pass-copy .eyebrow { color: #4eb7ff; }
-        .pass-copy h2 { font-size: 42px; color: #ffc52d; margin: 18px 0 0; }
-        .pass-copy h2 small { font-size: 20px; }
-        .pass-copy p { font-size: 15px; margin: 0; }
-        .pass-copy strong { display: block; margin: 14px 0 22px; font-size: 15px; }
-        .pass-media { height: 220px; }
+        .pass-section { display: grid; grid-template-columns: 1.1fr 0.9fr; background: #062e78; border-radius: 20px; overflow: hidden; color: #fff; min-height: auto; align-items: stretch; }
+        .pass-copy { padding: 18px 14px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+        .pass-copy .eyebrow { color: #4eb7ff; font-size: 9px; margin: 0 0 4px; }
+        .pass-copy h2 { font-size: 26px; color: #ffc52d; margin: 8px 0 0; line-height: 1; }
+        .pass-copy h2 small { font-size: 13px; }
+        .pass-copy p { font-size: 11px; margin: 2px 0 0; }
+        .pass-copy strong { display: block; margin: 8px 0 12px; font-size: 11px; }
+        .pass-media { min-height: 100%; }
         .pass-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .pharmacy-section, .join-section { display: grid; grid-template-columns: 1fr; align-items: stretch; margin-top: 28px; overflow: hidden; border-radius: 28px; background: #f4f9ff; }
-        .pharmacy-copy, .join-copy { padding: 32px; }
-        .pharmacy-section h2, .join-copy h2 { font-size: 24px; margin: 0; color: #082c72; }
-        .pharmacy-section img, .join-section img { width: 100%; height: 250px; object-fit: cover; display: block; }
-        .pharmacy-copy p:not(.eyebrow), .join-copy p:not(.eyebrow) { font-size: 15px; line-height: 1.5; color: #486283; margin: 8px 0 20px; }
+        .pharmacy-section, .join-section { display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: stretch; margin-top: 16px; overflow: hidden; border-radius: 20px; background: #f4f9ff; }
+        .pharmacy-copy, .join-copy { padding: 16px 12px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+        .pharmacy-section h2, .join-copy h2 { font-size: 15px; margin: 0; color: #082c72; line-height: 1.2; }
+        .pharmacy-section img, .join-section img { width: 100%; height: 100%; min-height: 150px; object-fit: cover; display: block; }
+        .pharmacy-copy p:not(.eyebrow), .join-copy p:not(.eyebrow) { font-size: 10.5px; line-height: 1.35; color: #486283; margin: 6px 0 10px; }
 
         .footer { margin-top: 50px; padding: 35px 5%; display: flex; flex-direction: column; gap: 15px; align-items: center; justify-content: space-between; background: #062e78; color: #fff; text-align: center; }
         .footer :global(img) { width: 100px; filter: brightness(0) invert(1); }
@@ -204,9 +204,11 @@ export default function Home() {
 
           .pass-section { grid-template-columns: 45% 55%; min-height: 300px; }
           .pass-copy { padding: 42px; }
-          .pass-copy h2 { font-size: 58px; }
+          .pass-copy .eyebrow { font-size: 14px; margin: 0 0 10px; }
+          .pass-copy h2 { font-size: 58px; margin: 18px 0 0; }
           .pass-copy h2 small { font-size: 25px; }
           .pass-copy p { font-size: 17px; }
+          .pass-copy strong { font-size: 15px; margin: 16px 0 25px; }
           .pass-media { height: auto; }
 
           .pharmacy-section, .join-section { grid-template-columns: 45% 55%; }
