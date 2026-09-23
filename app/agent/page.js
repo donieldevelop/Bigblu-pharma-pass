@@ -11,6 +11,7 @@ export default function AgentAccueilPage() {
   const [clients, setClients] = useState([]);
   const [loadingClients, setLoadingClients] = useState(true);
   const [afficherFormulaire, setAfficherFormulaire] = useState(false);
+  const [commissions, setCommissions] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -21,8 +22,17 @@ export default function AgentAccueilPage() {
       if (u?.role !== 'commercial') return router.push('/agent/login');
       setSession(s.session);
       await chargerClients();
+      await chargerCommissions(s.session.user.id);
     })();
   }, [router]);
+
+  async function chargerCommissions(agentId) {
+    const { data } = await supabase
+      .from('vue_commissions_agent')
+      .select('*')
+      .eq('beneficiaire_id', agentId);
+    setCommissions(data || []);
+  }
 
   async function chargerClients() {
     setLoadingClients(true);
@@ -48,6 +58,18 @@ export default function AgentAccueilPage() {
         <h1>Espace Agent</h1>
         <button onClick={logout} className="btnDeconnexion"><LogOut size={16} /> Déconnexion</button>
       </div>
+
+      {commissions && commissions.length > 0 && (
+        <div className="blocCommissions">
+          {commissions.map((c) => (
+            <div key={c.role_beneficiaire} className="carteCommission">
+              <span className="labelRole">{c.role_beneficiaire === 'responsable_commercial' ? 'En tant que responsable' : 'Mes commissions'}</span>
+              <strong>{Number(c.total_commissions).toLocaleString('fr-FR')} FCFA</strong>
+              <span className="detail">{c.nb_cartes} carte(s) · {c.nb_abonnements} abonnement(s)</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="actions">
         <button onClick={() => setAfficherFormulaire(true)} className="btnPrincipal">
@@ -89,6 +111,11 @@ export default function AgentAccueilPage() {
         .entete { max-width: 480px; margin: 0 auto 20px; display: flex; justify-content: space-between; align-items: center; }
         .entete h1 { font-size: 20px; color: #12294D; margin: 0; }
         .btnDeconnexion { display: flex; align-items: center; gap: 6px; background: none; border: none; color: #B8324D; font-size: 13px; cursor: pointer; }
+        .blocCommissions { max-width: 480px; margin: 0 auto 20px; display: flex; gap: 10px; }
+        .carteCommission { flex: 1; background: #0B1B33; color: white; border-radius: 14px; padding: 16px; }
+        .labelRole { font-size: 11px; color: rgba(255,255,255,0.6); }
+        .carteCommission strong { display: block; font-size: 19px; color: #F0C48A; margin: 4px 0 2px; }
+        .detail { font-size: 11px; color: rgba(255,255,255,0.55); }
         .actions { max-width: 480px; margin: 0 auto 20px; }
         .btnPrincipal { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #12294D; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; }
         .listeSection { max-width: 480px; margin: 0 auto; }
