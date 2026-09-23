@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Heart, ShieldCheck, TrendingUp, Users, ArrowRight } from 'lucide-react';
+import { Heart, ShieldCheck, TrendingUp, Users, ArrowRight, MapPin, Facebook, Linkedin, Youtube } from 'lucide-react';
 
 export default function Home() {
   const [visible, setVisible] = useState(false);
@@ -19,11 +19,11 @@ export default function Home() {
   ];
 
   const etapes = [
-    { image: '/how-it-works/01-creez-votre-compte.svg', titre: 'Créez votre compte' },
-    { image: '/how-it-works/02-recevez-votre-pass.svg', titre: 'Recevez votre Pass' },
-    { image: '/how-it-works/03-pharmacie-partenaire.svg', titre: 'Rendez-vous en pharmacie partenaire' },
-    { image: '/how-it-works/04-presentez-votre-qr-code.svg', titre: 'Présentez votre QR Code' },
-    { image: '/how-it-works/05-beneficiez-de-vos-medicaments.svg', titre: 'Bénéficiez de vos médicaments' },
+    { image: '/how-it-works-photo/01.jpg', titre: 'Créez votre compte' },
+    { image: '/how-it-works-photo/02.jpg', titre: 'Recevez votre Pass' },
+    { image: '/how-it-works-photo/03.jpg', titre: 'Rendez-vous en pharmacie partenaire' },
+    { image: '/how-it-works-photo/04.jpg', titre: 'Présentez votre QR Code' },
+    { image: '/how-it-works-photo/05.jpg', titre: 'Bénéficiez de vos médicaments' },
   ];
 
   const beneficesTravailleur = [
@@ -79,7 +79,7 @@ export default function Home() {
         {avantages.map((a, i) => (
           <div key={a.titre} className="avantage">
             <div className={'avantageIcone ' + (i % 2 === 0 ? 'iconeBleue' : 'iconeViolette')}>
-              <img src={a.icone} alt="" width={26} height={26} />
+              <img src={a.icone} alt="" width={22} height={22} />
             </div>
             <span>{a.titre}</span>
           </div>
@@ -90,7 +90,13 @@ export default function Home() {
         <h2 className="titreSection">Comment ça fonctionne ?</h2>
         <div className="etapes">
           {etapes.map((e, i) => (
-            <img key={e.titre} src={e.image} alt={e.titre} className="etapeImage" />
+            <div key={e.titre} className="etape">
+              <div className="etapeImageWrap">
+                <img src={e.image} alt={e.titre} className="etapeImage" />
+                <span className="etapeNumero">{i + 1}</span>
+              </div>
+              <span className="etapeTitre">{e.titre}</span>
+            </div>
           ))}
         </div>
       </section>
@@ -140,7 +146,10 @@ export default function Home() {
           </p>
           <a href="/travailleur/login" className="btnClair">Voir les pharmacies <ArrowRight size={16} /></a>
         </div>
-        <div className="pharmaciesVisuel" aria-hidden="true" />
+        <div className="pharmaciesVisuel">
+          <img src="/pharmacie-devanture.jpg" alt="Pharmacie partenaire BIGBLU" className="pharmaciesPhoto" />
+          <span className="pharmaciesPin"><MapPin size={20} color="white" /></span>
+        </div>
       </section>
 
       <section className="espacePersonnel">
@@ -156,6 +165,7 @@ export default function Home() {
       </section>
 
       <section className="ctaFinal">
+        <img src="/cta-equipe.jpg" alt="Travailleurs BIGBLU PHARMA PASS" className="ctaPhoto" />
         <div className="ctaTexte">
           <h2 className="titreSection gauche blanc">
             Rejoignez <span className="accentClair">BIGBLU PHARMA PASS</span>
@@ -181,6 +191,14 @@ export default function Home() {
               <a href="mailto:contact@bigblupharmapass.com">Nous contacter</a>
               <a href="/pharmacie/login">Espace partenaire (pharmacie)</a>
             </div>
+            <div>
+              <strong>Suivez-nous</strong>
+              <div className="footerSocial">
+                <a href="#" aria-label="Facebook"><Facebook size={16} /></a>
+                <a href="#" aria-label="LinkedIn"><Linkedin size={16} /></a>
+                <a href="#" aria-label="YouTube"><Youtube size={16} /></a>
+              </div>
+            </div>
           </div>
         </div>
         <p className="footerCopyright">© {new Date().getFullYear()} BIGBLU AFRICA. Tous droits réservés.</p>
@@ -202,7 +220,6 @@ export default function Home() {
         .eyebrow { font-size: 10.5px; letter-spacing: 0.6px; color: #8393A8; margin: 0 0 8px; text-transform: uppercase; }
         .titre { font-family: var(--font-display), sans-serif; font-size: 26px; line-height: 1.2; font-weight: 700; margin: 0 0 10px; }
         .accentBlue { color: #2E7BC4; }
-        .accentPurple { color: #6C4FB3; }
         .paragraphe { font-size: 13px; color: #3E4C63; line-height: 1.55; margin: 0; }
         .heroBoutons { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
 
@@ -213,12 +230,12 @@ export default function Home() {
         .bulle strong { font-size: 11.5px; color: #12294D; }
         .bulle span { font-size: 9.5px; color: #5B6B82; }
 
-        .avantages { padding: 34px 12px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 8px; }
-        .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
-        .avantageIcone { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .avantages { padding: 34px 10px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .avantage { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+        .avantageIcone { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .iconeBleue { background: #DCE7F7; }
         .iconeViolette { background: #EDE7F9; }
-        .avantage span { font-size: 11px; color: #3E4C63; font-weight: 600; line-height: 1.25; }
+        .avantage span { font-size: 9px; color: #3E4C63; font-weight: 600; line-height: 1.2; }
 
         .btnPrimaire, .btnSecondaire, .btnClair, .btnBlanc { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 13px 20px; border-radius: 10px; font-weight: 700; font-size: 13.5px; text-decoration: none; }
         .btnPrimaire { background: #12294D; color: white; }
@@ -230,14 +247,18 @@ export default function Home() {
         .titreSection.gauche { text-align: left; }
         .titreSection.blanc { color: white; }
 
-        .commentCaMarche { padding: 46px 16px 10px; }
-        .etapes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 480px; margin: 0 auto; }
-        .etapeImage { width: 100%; height: auto; border-radius: 18px; }
+        .commentCaMarche { padding: 46px 10px 10px; }
+        .etapes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 1100px; margin: 0 auto; }
+        .etape { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+        .etapeImageWrap { position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden; background: white; }
+        .etapeImage { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .etapeNumero { position: absolute; top: 4px; left: 4px; width: 16px; height: 16px; border-radius: 50%; background: #0B5ED7; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .etapeTitre { font-size: 8.5px; font-weight: 600; color: #12294D; line-height: 1.2; }
 
         .santeTravail { padding: 46px 16px; display: flex; flex-direction: column; gap: 24px; }
         .santeTravailPhoto { width: 140px; border-radius: 18px; margin: 0 auto; display: block; box-shadow: 0 14px 28px -10px rgba(18,41,77,0.3); }
-        .beneficesGrille { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
-        .beneficeItem { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #3E4C63; font-weight: 600; }
+        .beneficesGrille { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 10px; margin-top: 18px; }
+        .beneficeItem { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #3E4C63; font-weight: 600; }
 
         .bas { margin-top: 10px; background: linear-gradient(180deg, #12294D 0%, #1A3A6B 100%); padding: 34px 20px; }
         .basContenu { display: flex; flex-direction: column; gap: 24px; }
@@ -253,13 +274,16 @@ export default function Home() {
         .pharmaciesSection { background: linear-gradient(135deg, #12294D, #0878D1); padding: 40px 16px; position: relative; overflow: hidden; }
         .pharmaciesTexte { position: relative; z-index: 1; max-width: 420px; }
         .pharmaciesParagraphe { color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.55; margin: 12px 0 20px; }
-        .pharmaciesVisuel { display: none; }
+        .pharmaciesVisuel { position: relative; margin-top: 24px; border-radius: 16px; overflow: hidden; }
+        .pharmaciesPhoto { width: 100%; display: block; }
+        .pharmaciesPin { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 40px; height: 40px; border-radius: 50%; background: #0878D1; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
 
         .espacePersonnel { padding: 40px 16px; background: white; }
         .espaceVisuel { display: none; }
 
-        .ctaFinal { background: linear-gradient(135deg, #0B1B33, #123563); padding: 44px 16px; text-align: center; }
-        .ctaTexte { max-width: 480px; margin: 0 auto; }
+        .ctaFinal { background: linear-gradient(135deg, #0B1B33, #123563); padding: 44px 16px; text-align: center; position: relative; overflow: hidden; }
+        .ctaPhoto { display: none; }
+        .ctaTexte { max-width: 480px; margin: 0 auto; position: relative; z-index: 1; }
         .accentClair { color: #6FA9E8; }
         .ctaParagraphe { color: rgba(255,255,255,0.8); font-size: 13.5px; margin: 10px 0 22px; }
 
@@ -269,6 +293,8 @@ export default function Home() {
         .footerColonnes { display: flex; gap: 40px; flex-wrap: wrap; }
         .footerColonnes strong { display: block; font-size: 13px; margin-bottom: 10px; color: white; }
         .footerColonnes a { display: block; font-size: 12.5px; color: rgba(255,255,255,0.6); text-decoration: none; margin-bottom: 6px; }
+        .footerSocial { display: flex; gap: 10px; }
+        .footerSocial a { display: flex; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.08); align-items: center; justify-content: center; color: white; margin: 0; }
         .footerCopyright { font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; max-width: 1100px; margin: 0 auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 
         @media (min-width: 860px) {
@@ -280,9 +306,13 @@ export default function Home() {
           .titre { font-size: 42px; }
           .paragraphe { font-size: 15px; max-width: 460px; }
           .heroVisuel { flex: 0.9; width: 280px; }
-          .avantages { grid-template-columns: repeat(4, 1fr); padding: 40px 40px 0; max-width: 1100px; margin: 0 auto; }
+          .avantages { grid-template-columns: repeat(4, 1fr); padding: 40px 40px 0; max-width: 1100px; margin: 0 auto; gap: 20px; }
+          .avantageIcone { width: 56px; height: 56px; }
+          .avantage span { font-size: 13px; }
           .commentCaMarche { padding: 70px 40px 20px; }
-          .etapes { grid-template-columns: repeat(5, 1fr); max-width: 1100px; }
+          .etapes { gap: 16px; }
+          .etapeTitre { font-size: 12px; }
+          .etapeNumero { width: 22px; height: 22px; font-size: 12px; top: 8px; left: 8px; }
           .santeTravail { flex-direction: row; align-items: center; padding: 70px 40px; max-width: 1100px; margin: 0 auto; gap: 60px; }
           .santeTravailPhoto { width: 240px; margin: 0; }
           .beneficesGrille { grid-template-columns: 1fr 1fr; }
@@ -290,10 +320,15 @@ export default function Home() {
           .basContenu { flex-direction: row; align-items: center; justify-content: center; gap: 56px; max-width: 1100px; margin: 0 auto; }
           .tagline { text-align: left; max-width: 280px; font-size: 20px; }
           .pharmaciesSection { padding: 60px 40px; }
-          .pharmaciesTexte { max-width: 1100px; margin: 0 auto; }
-          .espacePersonnel { padding: 60px 40px; }
-          .espaceTexte { max-width: 1100px; margin: 0 auto; }
-          .ctaFinal { padding: 64px 40px; }
+          .pharmaciesTexte { max-width: none; flex: 1; }
+          .pharmaciesSection { display: flex; align-items: center; gap: 50px; }
+          .pharmaciesVisuel { flex: 1; margin-top: 0; max-width: 480px; }
+          .espacePersonnel { padding: 60px 40px; display: flex; align-items: center; gap: 50px; max-width: 1100px; margin: 0 auto; }
+          .espaceVisuel { display: block; flex: 1; height: 320px; border-radius: 20px; background: linear-gradient(135deg, #DCE7F7, #EDE7F9); }
+          .espaceTexte { flex: 1; }
+          .ctaFinal { padding: 0; display: flex; align-items: center; text-align: left; min-height: 320px; }
+          .ctaPhoto { display: block; flex: 1; height: 320px; object-fit: cover; }
+          .ctaTexte { flex: 1; padding: 40px 56px; max-width: none; }
           .footerHaut { flex-direction: row; justify-content: space-between; align-items: flex-start; }
         }
       `}</style>
