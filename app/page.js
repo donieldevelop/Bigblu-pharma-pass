@@ -1,10 +1,10 @@
 'use client';
 
 const FEATURES = [
-  { icone: '●', titre: 'Accès facilité', suite: 'aux médicaments' },
-  { icone: '✓', titre: 'Utilisation simple', suite: 'avec QR Code' },
-  { icone: '+', titre: 'Réseau de pharmacies', suite: 'partenaires' },
-  { icone: '●', titre: 'Pour tous les', suite: 'travailleurs' },
+  { icone: '/icons/plafond-mensuel.svg', titre: 'Accès facilité', suite: 'aux médicaments' },
+  { icone: '/icons/utilisation-qr.svg', titre: 'Utilisation simple', suite: 'avec QR Code' },
+  { icone: '/icons/pharmacies-partenaires.svg', titre: 'Réseau de pharmacies', suite: 'partenaires' },
+  { icone: '/icons/travailleurs.svg', titre: 'Pour tous les', suite: 'travailleurs' },
 ];
 
 const STEPS = [
@@ -51,7 +51,7 @@ export default function Home() {
         <section id="fonctionnalites" className="features section">
           {FEATURES.map((f) => (
             <article key={f.titre}>
-              <div className="feature-icon">{f.icone}</div>
+              <div className="feature-icon"><img src={f.icone} alt="" /></div>
               <h3>{f.titre}<br />{f.suite}</h3>
             </article>
           ))}
@@ -140,7 +140,8 @@ export default function Home() {
 
         .features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 30px 0; }
         .features article { padding: 18px 8px; text-align: center; border-radius: 20px; background: #f7faff; }
-        .feature-icon { width: 52px; height: 52px; border-radius: 16px; margin: 0 auto 12px; background: #e7f1ff; color: #0868ee; display: grid; place-items: center; font-size: 22px; font-weight: 800; }
+        .feature-icon { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 12px; background: #e7f1ff; display: grid; place-items: center; }
+        .feature-icon img { width: 24px; height: 24px; }
         .features h3 { font-size: 12.5px; line-height: 1.3; margin: 0; color: #082c72; }
 
         .section-heading { margin: 20px 0; }
@@ -188,7 +189,8 @@ export default function Home() {
 
           .features { grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 36px 0; }
           .features article { padding: 25px 15px; }
-          .feature-icon { width: 64px; height: 64px; border-radius: 20px; font-size: 28px; }
+          .feature-icon { width: 64px; height: 64px; }
+          .feature-icon img { width: 30px; height: 30px; }
           .features h3 { font-size: 16px; }
 
           .section-heading h2 { font-size: 34px; }
