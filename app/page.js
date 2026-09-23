@@ -1,7 +1,7 @@
 'use client';
 
 const FEATURES = [
-  { icone: '/icons/plafond-mensuel.svg', titre: 'Accès facilité', suite: 'aux médicaments' },
+  { icone: '/icons/plafond-mensuel.svg', titre: 'Un crédit mensuel', suite: 'dédié' },
   { icone: '/icons/utilisation-qr.svg', titre: 'Utilisation simple', suite: 'avec QR Code' },
   { icone: '/icons/pharmacies-partenaires.svg', titre: 'Réseau de pharmacies', suite: 'partenaires' },
   { icone: '/icons/travailleurs.svg', titre: 'Pour tous les', suite: 'travailleurs' },
