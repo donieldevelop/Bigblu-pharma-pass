@@ -90,10 +90,7 @@ export default function Home() {
         <h2 className="titreSection">Comment ça fonctionne ?</h2>
         <div className="etapes">
           {etapes.map((e, i) => (
-            <div key={e.titre} className="etape">
-              <img src={e.image} alt="" className="etapeImage" />
-              <span className="etapeTitre">{e.titre}</span>
-            </div>
+            <img key={e.titre} src={e.image} alt={e.titre} className="etapeImage" />
           ))}
         </div>
       </section>
@@ -235,9 +232,7 @@ export default function Home() {
 
         .commentCaMarche { padding: 46px 16px 10px; }
         .etapes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 480px; margin: 0 auto; }
-        .etape { background: white; border-radius: 14px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
-        .etapeImage { width: 56px; height: 56px; }
-        .etapeTitre { font-size: 12px; font-weight: 600; color: #12294D; line-height: 1.3; }
+        .etapeImage { width: 100%; height: auto; border-radius: 18px; }
 
         .santeTravail { padding: 46px 16px; display: flex; flex-direction: column; gap: 24px; }
         .santeTravailPhoto { width: 140px; border-radius: 18px; margin: 0 auto; display: block; box-shadow: 0 14px 28px -10px rgba(18,41,77,0.3); }
