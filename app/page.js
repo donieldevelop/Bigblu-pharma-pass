@@ -122,20 +122,20 @@ export default function Home() {
         .site-header { height: 78px; display: flex; align-items: center; gap: 32px; padding: 10px 5%; position: sticky; top: 0; background: rgba(255,255,255,.96); z-index: 20; border-bottom: 1px solid #eef3fa; justify-content: space-between; }
         .brand img { width: 90px; display: block; }
         .nav { display: none; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 9px 12px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 10.5px; text-align: center; }
         .btn-primary { background: #0868ee; color: #fff; }
         .btn-outline { border: 2px solid #0868ee; color: #0868ee; background: #fff; }
         .btn-light { background: #fff; color: #073575; }
         .header-btn { padding: 11px 18px; font-size: 13px; }
 
-        .hero { min-height: auto; display: grid; grid-template-columns: 1fr; align-items: stretch; background: #f3f8ff; overflow: hidden; border-radius: 0 0 28px 28px; }
-        .hero-copy { padding: 48px 25px 30px; display: flex; flex-direction: column; justify-content: center; }
-        .eyebrow { font-size: 14px; font-weight: 800; letter-spacing: .8px; color: #0871ed; margin: 0 0 10px; }
-        .hero h1 { font-size: 36px; line-height: 1.1; margin: 0 0 18px; color: #082c72; }
+        .hero { min-height: auto; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: stretch; background: #f3f8ff; overflow: hidden; border-radius: 0 0 28px 28px; }
+        .hero-copy { padding: 24px 8px 24px 16px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+        .eyebrow { font-size: 10px; letter-spacing: .5px; font-weight: 800; color: #0871ed; margin: 0 0 6px; }
+        .hero h1 { font-size: 20px; line-height: 1.15; margin: 0 0 8px; color: #082c72; }
         .hero h1 span { color: #0868ee; }
-        .hero-copy > p:not(.eyebrow) { font-size: 15px; line-height: 1.55; max-width: 500px; color: #35527d; margin: 0; }
-        .actions { display: flex; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
-        .hero-media { height: 280px; }
+        .hero-copy > p:not(.eyebrow) { font-size: 11.5px; line-height: 1.4; max-width: 500px; color: #35527d; margin: 0; }
+        .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .hero-media { min-height: 100%; }
         .hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 30px 0; }
@@ -183,8 +183,11 @@ export default function Home() {
 
           .hero { grid-template-columns: 43% 57%; min-height: 540px; }
           .hero-copy { padding: 75px 20px 55px 55px; }
-          .hero h1 { font-size: 52px; line-height: 1.02; }
+          .eyebrow { font-size: 14px; letter-spacing: .8px; margin: 0 0 10px; }
+          .hero h1 { font-size: 52px; line-height: 1.02; margin: 0 0 18px; }
           .hero-copy > p:not(.eyebrow) { font-size: 18px; }
+          .actions { gap: 14px; margin-top: 18px; }
+          .btn { padding: 14px 24px; border-radius: 10px; font-size: 14px; }
           .hero-media { height: auto; }
 
           .features { grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 36px 0; }
