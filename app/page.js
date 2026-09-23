@@ -142,11 +142,11 @@ export default function Home() {
         .hero-media { min-height: 100%; }
         .hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-        .features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 30px 0; }
-        .features article { padding: 18px 8px; text-align: center; border-radius: 20px; background: #f7faff; }
-        .feature-icon { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 12px; background: #e7f1ff; display: grid; place-items: center; }
-        .feature-icon img { width: 24px; height: 24px; }
-        .features h3 { font-size: 12.5px; line-height: 1.3; margin: 0; color: #082c72; }
+        .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 30px 0; }
+        .features article { padding: 10px 4px; text-align: center; border-radius: 14px; background: #f7faff; }
+        .feature-icon { width: 38px; height: 38px; border-radius: 50%; margin: 0 auto 6px; background: #e7f1ff; display: grid; place-items: center; }
+        .feature-icon img { width: 18px; height: 18px; }
+        .features h3 { font-size: 8.5px; line-height: 1.2; margin: 0; color: #082c72; }
 
         .section-heading { margin: 20px 0; }
         .section-heading h2 { font-size: 26px; margin: 0; color: #082c72; }
@@ -235,9 +235,9 @@ export default function Home() {
 
         @media (max-width: 560px) {
           .hero h1 { font-size: 30px; }
-          .features { gap: 8px; }
-          .features article { padding: 14px 6px; }
-          .features h3 { font-size: 11.5px; }
+          .features { gap: 4px; }
+          .features article { padding: 8px 3px; }
+          .features h3 { font-size: 7.5px; }
           .pass-copy h2 { font-size: 34px; }
           .section-heading h2 { font-size: 22px; }
         }
