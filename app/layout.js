@@ -1,5 +1,6 @@
 import RegisterSW from './components/RegisterSW';
 import { Space_Grotesk, IBM_Plex_Sans } from 'next/font/google';
+import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],

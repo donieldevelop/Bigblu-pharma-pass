@@ -247,7 +247,7 @@ export default function Home() {
         .passCardChip { width: 26px; height: 20px; border-radius: 4px; background: #D98E3B; }
         .passCardCaption { font-size: 12px; opacity: 0.7; margin-bottom: 2px; }
         .passCardAmount { font-family: var(--font-display), sans-serif; font-size: 26px; font-weight: 700; margin-bottom: 16px; }
-        .passCardFooter { display: flex; justify-content: space-between; font-size: 11px; opacity: 0.75; gap: 8px; }
+        .passCardFooter { display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 11px; opacity: 0.75; gap: 6px 8px; }
         .tagline { color: white; font-size: 16px; font-weight: 600; text-align: center; margin: 0; }
 
         .pharmaciesSection { background: linear-gradient(135deg, #12294D, #0878D1); padding: 40px 16px; position: relative; overflow: hidden; }
