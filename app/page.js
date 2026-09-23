@@ -152,11 +152,11 @@ export default function Home() {
         .section-heading h2 { font-size: 26px; margin: 0; color: #082c72; }
 
         .steps { padding: 20px 0 40px; }
-        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .step { position: relative; text-align: center; }
-        .step img { width: 100%; height: 190px; object-fit: cover; border-radius: 16px; display: block; }
-        .step span { position: absolute; z-index: 2; left: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%; background: #0868ee; color: #fff; display: grid; place-items: center; font-weight: 800; border: 3px solid #fff; font-size: 13px; }
-        .step h3 { font-size: 13.5px; line-height: 1.25; margin: 12px 5px; color: #082c72; }
+        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .step { position: relative; text-align: left; display: flex; flex-direction: row; align-items: center; gap: 12px; background: #f7faff; border-radius: 14px; padding: 8px; }
+        .step img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; display: block; }
+        .step span { position: absolute; z-index: 2; left: -6px; top: -6px; width: 26px; height: 26px; border-radius: 50%; background: #0868ee; color: #fff; display: grid; place-items: center; font-weight: 800; border: 2px solid #fff; font-size: 11px; }
+        .step h3 { font-size: 12.5px; line-height: 1.25; margin: 0; color: #082c72; flex: 1; }
 
         .pass-section { display: grid; grid-template-columns: 1.1fr 0.9fr; background: #062e78; border-radius: 20px; overflow: hidden; color: #fff; min-height: auto; align-items: stretch; }
         .pass-copy { padding: 18px 14px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
@@ -209,9 +209,10 @@ export default function Home() {
 
           .section-heading h2 { font-size: 34px; }
           .steps-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
-          .step img { height: 180px; }
-          .step span { width: 38px; height: 38px; font-size: 15px; }
-          .step h3 { font-size: 15px; }
+          .step { flex-direction: column; align-items: stretch; text-align: center; background: none; padding: 0; }
+          .step img { width: 100%; height: 180px; border-radius: 16px; }
+          .step span { left: 10px; top: 10px; width: 38px; height: 38px; font-size: 15px; border-width: 3px; }
+          .step h3 { font-size: 15px; margin: 12px 5px; }
 
           .pass-section { grid-template-columns: 45% 55%; min-height: 300px; }
           .pass-copy { padding: 42px; }
