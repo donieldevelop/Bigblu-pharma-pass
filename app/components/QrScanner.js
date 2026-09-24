@@ -61,18 +61,17 @@ export default function QrScanner({ onResult }) {
 
   return (
     <div>
-      {!actif ? (
+      {!actif && (
         <button onClick={demarrer} style={{ padding: '10px 16px', borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}>
           Scanner un QR Code
         </button>
-      ) : (
-        <div>
-          <video ref={videoRef} style={{ width: '100%', borderRadius: 8 }} muted playsInline />
-          <button onClick={arreter} style={{ marginTop: 8, padding: '6px 12px', borderRadius: 6, border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>
-            Annuler
-          </button>
-        </div>
       )}
+      <div style={{ display: actif ? 'block' : 'none' }}>
+        <video ref={videoRef} style={{ width: '100%', borderRadius: 8 }} muted playsInline />
+        <button onClick={arreter} style={{ marginTop: 8, padding: '6px 12px', borderRadius: 6, border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>
+          Annuler
+        </button>
+      </div>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
       {erreur && <p style={{ color: '#c0392b', fontSize: 13 }}>{erreur}</p>}
     </div>

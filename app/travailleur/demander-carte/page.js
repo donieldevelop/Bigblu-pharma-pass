@@ -138,13 +138,17 @@ export default function DemanderCartePage() {
             </button>
           )}
 
-          {camActive && (
-            <div className="camWrap">
-              <video ref={videoRef} muted playsInline className="video" />
-              <div className="cadreOvale" />
-              <button type="button" onClick={capturer} className="btnCapturer">Capturer</button>
-            </div>
+          {!photoDataUrl && !camActive && (
+            <button type="button" onClick={demarrerCamera} className="btnPhoto">
+              <Camera size={18} /> Prendre ma photo
+            </button>
           )}
+
+          <div className="camWrap" style={{ display: camActive && !photoDataUrl ? 'block' : 'none' }}>
+            <video ref={videoRef} muted playsInline className="video" />
+            <div className="cadreOvale" />
+            <button type="button" onClick={capturer} className="btnCapturer">Capturer</button>
+          </div>
 
           {photoDataUrl && (
             <div className="apercu">
