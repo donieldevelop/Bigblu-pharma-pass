@@ -1,5 +1,10 @@
 'use client';
 
+import { Poppins, Inter } from 'next/font/google';
+
+const poppins = Poppins({ subsets: ['latin'], weight: ['600', '700', '800'], variable: '--font-heading' });
+const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-body' });
+
 const FEATURES = [
   { icone: '/icons/plafond-mensuel.svg', titre: 'Un crédit mensuel', suite: 'dédié' },
   { icone: '/icons/utilisation-qr.svg', titre: 'Utilisation simple', suite: 'avec QR Code' },
@@ -17,7 +22,7 @@ const STEPS = [
 
 export default function Home() {
   return (
-    <div className="page">
+    <div className={'page ' + poppins.variable + ' ' + inter.variable}>
       <header className="site-header">
         <a className="brand" href="#accueil">
           <img src="/logo-complet.png" alt="BIGBLU AFRICA" />
@@ -117,7 +122,8 @@ export default function Home() {
       </footer>
 
       <style jsx>{`
-        .page { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #092b70; background: #fff; }
+        .page { margin: 0; font-family: var(--font-body), Arial, sans-serif; color: #092b70; background: #fff; }
+        .page :global(h1), .page :global(h2), .page :global(h3) { font-family: var(--font-heading), sans-serif; }
         .page :global(*) { box-sizing: border-box; }
         .page :global(img) { max-width: 100%; }
         .page :global(a) { text-decoration: none; }
@@ -154,11 +160,11 @@ export default function Home() {
         .section-heading h2 { font-size: 26px; margin: 0; color: #082c72; }
 
         .steps { padding: 20px 0 40px; }
-        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .step { position: relative; text-align: left; display: flex; flex-direction: row; align-items: center; gap: 12px; background: #fff; box-shadow: 0 4px 14px -6px rgba(76,29,149,.15); border-radius: 18px; padding: 8px; }
-        .step img { width: 90px; height: 90px; object-fit: cover; border-radius: 14px; display: block; }
-        .step span { position: absolute; z-index: 2; left: -6px; top: -6px; width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #0868ee, #7c3aed); color: #fff; display: grid; place-items: center; font-weight: 800; border: 2px solid #fff; font-size: 11px; }
-        .step h3 { font-size: 12.5px; line-height: 1.25; margin: 0; color: #082c72; flex: 1; }
+        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .step { position: relative; text-align: left; display: flex; flex-direction: row; align-items: center; gap: 14px; background: linear-gradient(135deg, #fff, #f8f5ff); box-shadow: 0 6px 18px -8px rgba(76,29,149,.25); border: 1px solid #f0e9ff; border-radius: 20px; padding: 10px; }
+        .step img { width: 118px; height: 118px; object-fit: cover; border-radius: 16px; display: block; flex-shrink: 0; }
+        .step span { position: absolute; z-index: 2; left: -8px; top: -8px; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #0868ee, #7c3aed); color: #fff; display: grid; place-items: center; font-weight: 800; border: 3px solid #fff; font-size: 13px; box-shadow: 0 4px 10px -2px rgba(124,58,237,.5); }
+        .step h3 { font-size: 14px; line-height: 1.3; margin: 0; color: #082c72; flex: 1; font-weight: 700; }
 
         .pass-section { display: grid; grid-template-columns: 1.1fr 0.9fr; background: linear-gradient(120deg, #062e78 0%, #4c1d95 100%); border-radius: 28px; overflow: hidden; color: #fff; min-height: auto; align-items: stretch; }
         .pass-copy { padding: 18px 14px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
@@ -211,11 +217,11 @@ export default function Home() {
           .features h3 { font-size: 16px; }
 
           .section-heading h2 { font-size: 34px; }
-          .steps-grid { grid-template-columns: repeat(5, 1fr); gap: 15px; }
-          .step { flex-direction: column; align-items: stretch; text-align: center; background: none; padding: 0; }
-          .step img { width: 100%; height: 180px; border-radius: 16px; }
-          .step span { left: 10px; top: 10px; width: 38px; height: 38px; font-size: 15px; border-width: 3px; }
-          .step h3 { font-size: 15px; margin: 12px 5px; }
+          .steps-grid { grid-template-columns: repeat(5, 1fr); gap: 18px; }
+          .step { flex-direction: column; align-items: stretch; text-align: center; background: linear-gradient(160deg, #fff, #f8f5ff); border: 1px solid #f0e9ff; padding: 14px; border-radius: 22px; }
+          .step img { width: 100%; height: 190px; border-radius: 18px; }
+          .step span { left: 14px; top: 14px; width: 42px; height: 42px; font-size: 16px; border-width: 3px; }
+          .step h3 { font-size: 15px; margin: 14px 4px 0; }
 
           .pass-section { grid-template-columns: 45% 55%; min-height: 300px; }
           .pass-copy { padding: 42px; }
