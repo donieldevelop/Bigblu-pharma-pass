@@ -29,6 +29,7 @@ export default function Home() {
           <a href="#apropos">À propos</a>
           <a href="#contact">Contact</a>
         </nav>
+        <a className="headerLien" href="/travailleur/login">Se connecter</a>
         <a className="btn btn-primary header-btn" href="/travailleur/inscription">S&apos;inscrire</a>
       </header>
 
@@ -132,6 +133,7 @@ export default function Home() {
         .btn-outline { border: 2px solid #7c3aed; color: #6d28d9; background: #fff; }
         .btn-light { background: #fff; color: #073575; }
         .header-btn { padding: 11px 20px; font-size: 13px; }
+        .headerLien { font-size: 12.5px; font-weight: 700; color: #12294D; margin-left: auto; }
 
         .hero { min-height: auto; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: stretch; background: linear-gradient(120deg, #eef2ff 0%, #f3e8ff 100%); overflow: hidden; border-radius: 0 0 36px 36px; position: relative; }
         .hero::after { content: ''; position: absolute; top: -60px; left: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(124,58,237,.18), transparent 70%); z-index: 0; }
