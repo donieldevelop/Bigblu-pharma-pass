@@ -49,6 +49,8 @@ export default function CarteRecto({ photoUrl, nomComplet, matricule, qrValue, l
           border-radius: 1.6cqw;
           overflow: hidden;
         }
+        /* Fond uni du cadre derriere une photo detouree (fond transparent) */
+        .photo:has(img) { background: #C8DBF4; }
         .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .nom, .matricule {
           position: absolute;

@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabaseClient';
-import { ArrowLeft, Camera, RotateCcw, Check } from 'lucide-react';
+import { ArrowLeft, Camera, RotateCcw, Check, Loader2 } from 'lucide-react';
+import { retirerFond } from '../../../lib/retirerFond';
 
 export default function DemanderCartePage() {
   const [session, setSession] = useState(null);
@@ -13,6 +14,9 @@ export default function DemanderCartePage() {
   const [envoi, setEnvoi] = useState(false);
   const [error, setError] = useState('');
   const [ok, setOk] = useState(false);
+  const [photoOriginale, setPhotoOriginale] = useState(null);
+  const [traitement, setTraitement] = useState(false);
+  const [echecFond, setEchecFond] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -47,19 +51,39 @@ export default function DemanderCartePage() {
   function capturer() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const size = 320;
+    const size = 640;
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext('2d');
     const vw = video.videoWidth, vh = video.videoHeight;
     const side = Math.min(vw, vh);
     ctx.drawImage(video, (vw - side) / 2, (vh - side) / 2, side, side, 0, 0, size, size);
-    setPhotoDataUrl(canvas.toDataURL('image/jpeg', 0.9));
+    const originale = canvas.toDataURL('image/jpeg', 0.92);
     arreterCamera();
+    setPhotoOriginale(originale);
+    traiterFond(originale);
+  }
+
+  // Retire le fond automatiquement (fond transparent)
+  async function traiterFond(originale) {
+    setTraitement(true);
+    setEchecFond(false);
+    setPhotoDataUrl(null);
+    try {
+      const sansFond = await retirerFond(originale);
+      setPhotoDataUrl(sansFond);
+    } catch (e) {
+      // En cas d'echec, on garde la photo d'origine pour ne pas bloquer
+      setEchecFond(true);
+      setPhotoDataUrl(originale);
+    }
+    setTraitement(false);
   }
 
   function reprendre() {
     setPhotoDataUrl(null);
+    setPhotoOriginale(null);
+    setEchecFond(false);
     demarrerCamera();
   }
 
@@ -71,9 +95,10 @@ export default function DemanderCartePage() {
 
     try {
       const blob = await (await fetch(photoDataUrl)).blob();
-      const path = `${session.user.id}/${Date.now()}.jpg`;
+      const estPng = photoDataUrl.startsWith('data:image/png');
+      const path = `${session.user.id}/${Date.now()}.${estPng ? 'png' : 'jpg'}`;
       const { error: uploadError } = await supabase.storage.from('photos-cartes').upload(path, blob, {
-        contentType: 'image/jpeg',
+        contentType: estPng ? 'image/png' : 'image/jpeg',
       });
       if (uploadError) throw uploadError;
 
@@ -132,30 +157,47 @@ export default function DemanderCartePage() {
 
           <label className="label">Photo</label>
 
-          {!photoDataUrl && !camActive && (
+          {!photoDataUrl && !camActive && !traitement && (
             <button type="button" onClick={demarrerCamera} className="btnPhoto">
               <Camera size={18} /> Prendre ma photo
             </button>
           )}
 
-          {!photoDataUrl && !camActive && (
-            <button type="button" onClick={demarrerCamera} className="btnPhoto">
-              <Camera size={18} /> Prendre ma photo
-            </button>
-          )}
-
-          <div className="camWrap" style={{ display: camActive && !photoDataUrl ? 'block' : 'none' }}>
+          <div className="camWrap" style={{ display: camActive && !photoDataUrl && !traitement ? 'block' : 'none' }}>
             <video ref={videoRef} muted playsInline className="video" />
             <div className="cadreOvale" />
             <button type="button" onClick={capturer} className="btnCapturer">Capturer</button>
           </div>
 
-          {photoDataUrl && (
+          {traitement && (
+            <div className="traitement">
+              <Loader2 size={22} className="tourne" />
+              <span>Suppression du fond en cours…</span>
+            </div>
+          )}
+
+          {photoDataUrl && !traitement && (
             <div className="apercu">
-              <img src={photoDataUrl} alt="Aperçu" className="photoApercu" />
-              <button type="button" onClick={reprendre} className="btnReprendre">
-                <RotateCcw size={14} /> Reprendre
-              </button>
+              <div className="cadrePhoto">
+                <img src={photoDataUrl} alt="Aperçu" className="photoApercu" />
+              </div>
+              {echecFond ? (
+                <p className="avertissement">
+                  Le fond n&apos;a pas pu être retiré. Tu peux réessayer, ou reprendre la photo devant un mur uni.
+                </p>
+              ) : (
+                <p className="aide">Vérifie que ton visage et tes cheveux sont bien détourés. Sinon, reprends la photo.</p>
+              )}
+              <div className="actionsApercu">
+                {echecFond && photoOriginale && (
+                  <button type="button" onClick={() => traiterFond(photoOriginale)} className="btnReprendre">
+                    Réessayer
+                  </button>
+                )}
+                <button type="button" onClick={reprendre} className="btnReprendre">
+                  <RotateCcw size={14} /> Reprendre la photo
+                </button>
+              </div>
             </div>
           )}
 
@@ -163,7 +205,7 @@ export default function DemanderCartePage() {
 
           {error && <p className="erreur">{error}</p>}
 
-          <button type="submit" disabled={!photoDataUrl || !entreprise || envoi} className="btnEnvoyer">
+          <button type="submit" disabled={!photoDataUrl || traitement || !entreprise || envoi} className="btnEnvoyer">
             {envoi ? 'Envoi...' : 'Envoyer ma demande'}
           </button>
         </form>
@@ -183,7 +225,15 @@ export default function DemanderCartePage() {
         .cadreOvale { position: absolute; inset: 10% 20%; border: 3px solid white; border-radius: 50%; opacity: 0.85; pointer-events: none; box-shadow: 0 0 0 999px rgba(0,0,0,0.35); }
         .btnCapturer { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: white; color: #12294D; border: none; padding: 10px 22px; border-radius: 24px; font-weight: 700; font-size: 13px; cursor: pointer; }
         .apercu { text-align: center; }
-        .photoApercu { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+        .cadrePhoto { width: 150px; height: 197px; margin: 0 auto 10px; border-radius: 12px; background: #C8DBF4; overflow: hidden; }
+        .photoApercu { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .traitement { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 30px 0; color: #12294D; font-size: 13px; }
+        .traitement :global(.tourne) { animation: tourne 1s linear infinite; }
+        @keyframes tourne { to { transform: rotate(360deg); } }
+        .aide, .avertissement { font-size: 12px; line-height: 1.45; margin: 0 0 6px; }
+        .aide { color: #5B6B82; }
+        .avertissement { color: #B45309; }
+        .actionsApercu { display: flex; justify-content: center; gap: 16px; }
         .btnReprendre { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; color: #12294D; font-size: 13px; cursor: pointer; }
         .erreur { color: #c0392b; font-size: 13px; margin-top: 10px; }
         .btnEnvoyer { width: 100%; margin-top: 20px; padding: 14px; border-radius: 10px; border: none; background: #12294D; color: white; font-weight: 700; font-size: 14px; cursor: pointer; }

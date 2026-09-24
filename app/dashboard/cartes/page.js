@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabaseClient';
+import { retirerFond } from '../../../lib/retirerFond';
 
 export default function CartesAdminPage() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [busyId, setBusyId] = useState(null);
+  const [fondId, setFondId] = useState(null); // carte en cours de traitement
+  const [apercu, setApercu] = useState(null); // { id, dataUrl }
   const router = useRouter();
 
   async function load() {
@@ -44,6 +47,39 @@ export default function CartesAdminPage() {
     setBusyId(null);
   }
 
+  async function lancerRetraitFond(c) {
+    setFondId(c.id);
+    setApercu(null);
+    try {
+      const dataUrl = await retirerFond(c.photo_url);
+      setApercu({ id: c.id, dataUrl });
+    } catch (e) {
+      alert("Le fond n'a pas pu être retiré : " + e.message);
+    }
+    setFondId(null);
+  }
+
+  async function validerSansFond() {
+    if (!apercu) return;
+    setBusyId(apercu.id);
+    try {
+      const { data: s } = await supabase.auth.getSession();
+      const blob = await (await fetch(apercu.dataUrl)).blob();
+      // Rangee dans le dossier de l'admin (regle de stockage : chacun ecrit dans son dossier)
+      const path = `${s.session.user.id}/sans-fond-${apercu.id}-${Date.now()}.png`;
+      const { error: upErr } = await supabase.storage.from('photos-cartes').upload(path, blob, { contentType: 'image/png' });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from('photos-cartes').getPublicUrl(path);
+      const { error: majErr } = await supabase.from('cartes_travailleur').update({ photo_url: pub.publicUrl }).eq('id', apercu.id);
+      if (majErr) throw majErr;
+      setApercu(null);
+      await load();
+    } catch (e) {
+      alert(e.message);
+    }
+    setBusyId(null);
+  }
+
   const libelle = { en_attente: 'En attente', disponible: 'Disponible (à récupérer)', recuperee: 'Récupérée', refusee: 'Refusée' };
 
   return (
@@ -67,8 +103,8 @@ export default function CartesAdminPage() {
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>
           {rows.map((c) => (
-            <div key={c.id} style={{ background: 'white', borderRadius: 10, padding: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
-              <img src={c.photo_url} alt="" style={{ width: 56, height: 56, borderRadius: 10, objectFit: 'cover' }} />
+            <div key={c.id} style={{ background: 'white', borderRadius: 10, padding: 16, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
+              <img src={c.photo_url} alt="" style={{ width: 56, height: 56, borderRadius: 10, objectFit: 'cover', background: '#C8DBF4' }} />
               <div style={{ flex: 1 }}>
                 <strong>{c.utilisateurs?.prenom} {c.utilisateurs?.nom}</strong>
                 <p style={{ fontSize: 12, color: '#888', margin: '2px 0' }}>{c.entreprise}</p>
@@ -77,6 +113,10 @@ export default function CartesAdminPage() {
                   {c.date_expiration ? ` · Expire le ${new Date(c.date_expiration).toLocaleDateString('fr-FR')}` : ''}
                 </p>
               </div>
+              <button onClick={() => lancerRetraitFond(c)} disabled={fondId === c.id || !c.photo_url}
+                style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #1a3a6b', background: 'white', color: '#1a3a6b', cursor: 'pointer', fontSize: 13.5 }}>
+                {fondId === c.id ? 'Traitement…' : 'Retirer le fond'}
+              </button>
               <a href={`/dashboard/cartes/recto?id=${c.id}`}
                 style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #1a3a6b', color: '#1a3a6b', textDecoration: 'none', fontSize: 13.5 }}>
                 Recto à imprimer
@@ -92,6 +132,23 @@ export default function CartesAdminPage() {
                   style={{ padding: '8px 14px', borderRadius: 6, border: 'none', background: '#0e7c3f', color: 'white', cursor: 'pointer' }}>
                   {busyId === c.id ? '...' : 'Marquer récupérée'}
                 </button>
+              )}
+              {apercu?.id === c.id && (
+                <div style={{ flexBasis: '100%', display: 'flex', alignItems: 'center', gap: 16, marginTop: 8, paddingTop: 12, borderTop: '1px solid #eee' }}>
+                  <img src={c.photo_url} alt="Avant" style={{ width: 90, height: 118, objectFit: 'cover', borderRadius: 8 }} />
+                  <span style={{ color: '#888' }}>→</span>
+                  <img src={apercu.dataUrl} alt="Après" style={{ width: 90, height: 118, objectFit: 'cover', borderRadius: 8, background: '#C8DBF4' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <button onClick={validerSansFond} disabled={busyId === c.id}
+                      style={{ padding: '8px 14px', borderRadius: 6, border: 'none', background: '#0e7c3f', color: 'white', cursor: 'pointer' }}>
+                      {busyId === c.id ? '...' : 'Valider la nouvelle photo'}
+                    </button>
+                    <button onClick={() => setApercu(null)}
+                      style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #ccc', background: 'white', cursor: 'pointer' }}>
+                      Annuler
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           ))}
