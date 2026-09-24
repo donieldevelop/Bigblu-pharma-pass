@@ -13,7 +13,7 @@ create table public.parametres_carte (
 );
 
 insert into public.parametres_carte (id, telephone_service_client, site_web)
-values (1, '+225 27 35 99 72 50', 'www.bigbluholding.com')
+values (1, '', '')
 on conflict (id) do nothing;
 
 alter table public.parametres_carte enable row level security;
