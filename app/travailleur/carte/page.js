@@ -83,73 +83,75 @@ export default function MaCartePage() {
       <a href="/travailleur/profil" className="retour"><ArrowLeft size={18} /> Retour</a>
 
       <div className="carteRecto">
+        <div className="rectoForme" />
+        <div className="rectoPlus">+</div>
+
         <div className="rectoHaut">
           <img src="/logo.png" alt="BIGBLU" className="logoCarte" />
-          <div>
-            <div className="titreCarte">BIGBLU PHARMA PASS</div>
-            <div className="sousTitreCarte">Votre santé, notre priorité</div>
-          </div>
+          <div className="slogan">Votre santé,<br />notre priorité</div>
         </div>
 
-        <div className="rectoMilieu">
-          <img src={carte.photo_url} alt="" className="photoCarte" />
-          <div>
+        <div className="rectoIdentite">
+          <div className="photoBox">
+            {carte.photo_url ? <img src={carte.photo_url} alt="" /> : <span>PHOTO</span>}
+          </div>
+          <div className="infoBox">
+            <span className="label">NOM ET PRÉNOM</span>
             <div className="nomCarte">{profil?.prenom} {profil?.nom}</div>
-            <div className="ligneInfo">Matricule : <strong>{carte.matricule}</strong></div>
-            <div className="ligneInfo">Entreprise : <strong>{carte.entreprise}</strong></div>
-            <div className="ligneInfo">Statut : <strong>Travailleur</strong></div>
+            <div className="traitAccent" />
+            <span className="label">MATRICULE</span>
+            <div className="matriculeCarte">{carte.matricule}</div>
+            <span className="label">STATUT</span>
+            <div className="statutBadge">TRAVAILLEUR</div>
           </div>
         </div>
 
         <div className="qrZone">
-          <QrCodeCanvas value={session.user.id} size={90} />
-          <span>Présentez cette carte en pharmacie</span>
+          <QrCodeCanvas value={session.user.id} size={110} />
+          <span>Présentez cette carte<br />en pharmacie</span>
         </div>
 
         <div className="rectoBas">
-          BIGBLU PHARMA PASS — SANTÉ · CONFIANCE · BIEN-ÊTRE
+          <span>BIGBLU PHARMA PASS</span>
+          <span className="rectoBasDroite">SANTÉ • CONFIANCE • BIEN-ÊTRE</span>
         </div>
       </div>
 
-      <div className="carteVerso">
-        <img src="/logo.png" alt="BIGBLU" className="logoVerso" />
-        <p className="verso1">Cette carte est personnelle et non transférable.</p>
-        <ul className="versoListe">
-          <li>À présenter à chaque achat en pharmacie partenaire.</li>
-          <li>Elle donne accès à votre crédit médicament.</li>
-          <li>En cas de perte, contactez le service client.</li>
-        </ul>
+      <div className="infosCarte">
         {carte.date_expiration && (
-          <p className="versoExpiration">Valable jusqu&apos;au {new Date(carte.date_expiration).toLocaleDateString('fr-FR')}</p>
+          <p>Valable jusqu&apos;au {new Date(carte.date_expiration).toLocaleDateString('fr-FR')}</p>
         )}
-        {libelleStatutPhysique && (
-          <p className="versoStatutPhysique">{libelleStatutPhysique}</p>
-        )}
+        {libelleStatutPhysique && <p>{libelleStatutPhysique}</p>}
       </div>
+
 
       <style jsx>{`
         .ecran { background: #EEF2F6; min-height: 100vh; padding: 20px; }
         .retour { display: inline-flex; align-items: center; gap: 6px; color: #5B6B82; text-decoration: none; font-size: 13px; margin-bottom: 16px; }
 
-        .carteRecto { max-width: 400px; margin: 0 auto 20px; background: linear-gradient(135deg, #ffffff 0%, #eef4fc 100%); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px -10px rgba(18,41,77,0.25); }
-        .rectoHaut { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-        .logoCarte { height: 34px; }
-        .titreCarte { font-weight: 800; color: #12294D; font-size: 14px; }
-        .sousTitreCarte { font-size: 10.5px; color: #5B6B82; }
-        .rectoMilieu { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
-        .photoCarte { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
-        .nomCarte { font-weight: 800; color: #12294D; font-size: 15px; margin-bottom: 4px; }
-        .ligneInfo { font-size: 11.5px; color: #5B6B82; }
-        .qrZone { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #F5F9FD; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
-        .qrZone span { font-size: 10.5px; color: #5B6B82; text-align: center; }
-        .rectoBas { text-align: center; font-size: 9px; letter-spacing: 0.5px; color: #8393A8; border-top: 1px solid #E4E8EE; padding-top: 10px; }
+        .carteRecto { position: relative; max-width: 400px; margin: 0 auto 16px; background: linear-gradient(135deg, #ffffff 0%, #eef8ff 48%, #0875ee 49%, #052d79 100%); border-radius: 22px; padding: 20px; overflow: hidden; box-shadow: 0 14px 34px -12px rgba(5,45,121,0.4); min-height: 400px; }
+        .rectoForme { position: absolute; width: 260px; height: 130px; right: -60px; bottom: 20px; background: linear-gradient(150deg, #0877f5, #003078); border-radius: 55% 0 0 0; transform: rotate(-8deg); }
+        .rectoPlus { position: absolute; right: 16px; top: 20px; font-size: 70px; color: rgba(68,183,255,0.3); font-weight: 700; line-height: 1; }
+        .rectoHaut { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+        .logoCarte { height: 30px; }
+        .slogan { font-size: 11px; line-height: 1.3; font-style: italic; color: #082c72; border-left: 2px solid #0875ee; padding-left: 8px; text-align: left; }
+        .rectoIdentite { position: relative; z-index: 2; display: flex; gap: 12px; margin-bottom: 16px; }
+        .photoBox { width: 78px; height: 100px; border-radius: 10px; background: #d6e1f0; border: 2px solid #fff; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .photoBox img { width: 100%; height: 100%; object-fit: cover; }
+        .photoBox span { color: #7184a0; font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+        .infoBox { flex: 1; min-width: 0; }
+        .label { display: block; font-size: 8.5px; letter-spacing: 1.5px; color: #153d82; margin-bottom: 2px; }
+        .nomCarte { font-size: 15px; font-weight: 800; color: #082c72; margin-bottom: 8px; line-height: 1.15; }
+        .traitAccent { width: 50px; height: 3px; border-radius: 4px; background: #0875ee; margin-bottom: 8px; }
+        .matriculeCarte { font-size: 12px; font-weight: 800; color: #082c72; margin-bottom: 8px; }
+        .statutBadge { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 7px; background: #0868ee; color: #fff; font-size: 10.5px; font-weight: 800; }
+        .qrZone { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 16px; padding: 12px; margin-bottom: 12px; max-width: 160px; box-shadow: 0 6px 16px -4px rgba(0,35,90,0.15); }
+        .qrZone span { font-size: 9.5px; color: #082c72; font-weight: 700; text-align: center; line-height: 1.25; }
+        .rectoBas { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; font-size: 8px; letter-spacing: 1px; font-weight: 700; color: #082c72; }
+        .rectoBasDroite { color: #fff; }
 
-        .carteVerso { max-width: 400px; margin: 0 auto; background: linear-gradient(135deg, #12294D 0%, #1A3A6B 100%); border-radius: 20px; padding: 24px; color: white; }
-        .logoVerso { height: 32px; filter: brightness(0) invert(1); margin-bottom: 14px; }
-        .verso1 { font-weight: 700; font-size: 13px; margin: 0 0 10px; }
-        .versoListe { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.7; opacity: 0.9; }
-        .versoExpiration { margin: 14px 0 0; font-size: 11.5px; opacity: 0.85; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; }
-        .versoStatutPhysique { margin: 6px 0 0; font-size: 11.5px; opacity: 0.85; }
+        .infosCarte { max-width: 400px; margin: 0 auto; text-align: center; }
+        .infosCarte p { font-size: 11.5px; color: #5B6B82; margin: 4px 0; }
       `}</style>
     </div>
   );
