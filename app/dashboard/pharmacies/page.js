@@ -26,7 +26,7 @@ export default function PharmaciesPage() {
     }
     const { data, error } = await supabase
       .from('pharmacies')
-      .select('id, nom, adresse, latitude, longitude, statut, qr_code_id, user_id')
+      .select('id, nom, adresse, latitude, longitude, statut, qr_code_id, user_id, publie, disponible')
       .order('nom', { ascending: true });
     if (error) setError(error.message);
     setPharmacies(data || []);
@@ -69,6 +69,18 @@ export default function PharmaciesPage() {
   async function refuserPharmacie(id) {
     if (!confirm('Supprimer définitivement cette demande ?')) return;
     const { error } = await supabase.from('pharmacies').delete().eq('id', id);
+    if (error) return setError(error.message);
+    load();
+  }
+
+  async function basculerPublication(id, valeurActuelle) {
+    const { error } = await supabase.from('pharmacies').update({ publie: !valeurActuelle }).eq('id', id);
+    if (error) return setError(error.message);
+    load();
+  }
+
+  async function basculerDisponibilite(id, valeurActuelle) {
+    const { error } = await supabase.from('pharmacies').update({ disponible: !valeurActuelle }).eq('id', id);
     if (error) return setError(error.message);
     load();
   }
@@ -161,6 +173,33 @@ export default function PharmaciesPage() {
                 <p style={{ fontSize: 12, color: '#888', margin: '4px 0 12px' }}>{p.adresse}</p>
                 <QrCodeCanvas value={p.qr_code_id} size={140} />
                 <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>{p.statut}</p>
+
+                <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <button
+                    onClick={() => basculerPublication(p.id, p.publie)}
+                    style={{
+                      padding: '6px 10px', fontSize: 12, borderRadius: 6, cursor: 'pointer',
+                      border: p.publie ? '1px solid #0e7c3f' : '1px solid #ddd',
+                      background: p.publie ? '#E4F5EA' : 'white',
+                      color: p.publie ? '#0e7c3f' : '#666',
+                    }}
+                  >
+                    {p.publie ? '✓ Publiée (partenaire public)' : 'Publier comme partenaire'}
+                  </button>
+                  {p.publie && (
+                    <button
+                      onClick={() => basculerDisponibilite(p.id, p.disponible)}
+                      style={{
+                        padding: '6px 10px', fontSize: 12, borderRadius: 6, cursor: 'pointer',
+                        border: p.disponible ? '1px solid #ddd' : '1px solid #c0392b',
+                        background: p.disponible ? 'white' : '#FBE7E9',
+                        color: p.disponible ? '#666' : '#c0392b',
+                      }}
+                    >
+                      {p.disponible ? 'Disponible — marquer indisponible' : '⚠ Indisponible — marquer disponible'}
+                    </button>
+                  )}
+                </div>
                 {p.user_id ? (
                   <p style={{ fontSize: 11, color: '#0e7c3f', marginTop: 4 }}>Compte pharmacien lié ✓</p>
                 ) : (
