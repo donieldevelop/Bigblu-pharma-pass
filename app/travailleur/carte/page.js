@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabaseClient';
 import CarteRecto from '../../components/CarteRecto';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Camera } from 'lucide-react';
 
 export default function MaCartePage() {
   const [session, setSession] = useState(null);
@@ -96,6 +96,7 @@ export default function MaCartePage() {
           <p>Valable jusqu&apos;au {new Date(carte.date_expiration).toLocaleDateString('fr-FR')}</p>
         )}
         {libelleStatutPhysique && <p>{libelleStatutPhysique}</p>}
+        <a href="/travailleur/changer-photo" className="btnChangerPhoto"><Camera size={15} /> Changer ma photo</a>
       </div>
 
 
@@ -107,6 +108,7 @@ export default function MaCartePage() {
 
         .infosCarte { max-width: 400px; margin: 0 auto; text-align: center; }
         .infosCarte p { font-size: 11.5px; color: #5B6B82; margin: 4px 0; }
+        .btnChangerPhoto { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 10px 18px; border-radius: 10px; border: 1px solid #12294D; color: #12294D; background: white; text-decoration: none; font-size: 13px; font-weight: 600; }
       `}</style>
     </div>
   );
