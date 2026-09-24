@@ -70,7 +70,6 @@ export default function Home() {
           <div className="steps-grid">
             {STEPS.map((s) => (
               <article key={s.n} className="step">
-                <span>{s.n}</span>
                 <img src={s.image} alt={s.titre} />
                 <h3>{s.titre}</h3>
               </article>
@@ -161,10 +160,9 @@ export default function Home() {
 
         .steps { padding: 20px 0 40px; }
         .steps-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-        .step { position: relative; text-align: left; display: flex; flex-direction: row; align-items: center; gap: 14px; background: linear-gradient(135deg, #fff, #f8f5ff); box-shadow: 0 6px 18px -8px rgba(76,29,149,.25); border: 1px solid #f0e9ff; border-radius: 20px; padding: 10px; }
-        .step img { width: 118px; height: 118px; object-fit: cover; border-radius: 16px; display: block; flex-shrink: 0; }
-        .step span { position: absolute; z-index: 2; left: -8px; top: -8px; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #0868ee, #7c3aed); color: #fff; display: grid; place-items: center; font-weight: 800; border: 3px solid #fff; font-size: 13px; box-shadow: 0 4px 10px -2px rgba(124,58,237,.5); }
-        .step h3 { font-size: 14px; line-height: 1.3; margin: 0; color: #082c72; flex: 1; font-weight: 700; }
+        .step { position: relative; text-align: left; display: flex; flex-direction: row; align-items: center; gap: 12px; background: linear-gradient(135deg, #fff, #f8f5ff); box-shadow: 0 6px 18px -8px rgba(76,29,149,.25); border: 1px solid #f0e9ff; border-radius: 20px; padding: 10px; }
+        .step img { width: 62%; aspect-ratio: 4/3; height: auto; object-fit: cover; border-radius: 16px; display: block; flex-shrink: 0; }
+        .step h3 { font-size: 13px; line-height: 1.3; margin: 0; color: #082c72; flex: 1; font-weight: 700; }
 
         .pass-section { display: grid; grid-template-columns: 1.1fr 0.9fr; background: linear-gradient(120deg, #062e78 0%, #4c1d95 100%); border-radius: 28px; overflow: hidden; color: #fff; min-height: auto; align-items: stretch; }
         .pass-copy { padding: 18px 14px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
@@ -220,7 +218,6 @@ export default function Home() {
           .steps-grid { grid-template-columns: repeat(5, 1fr); gap: 18px; }
           .step { flex-direction: column; align-items: stretch; text-align: center; background: linear-gradient(160deg, #fff, #f8f5ff); border: 1px solid #f0e9ff; padding: 14px; border-radius: 22px; }
           .step img { width: 100%; height: 190px; border-radius: 18px; }
-          .step span { left: 14px; top: 14px; width: 42px; height: 42px; font-size: 16px; border-width: 3px; }
           .step h3 { font-size: 15px; margin: 14px 4px 0; }
 
           .pass-section { grid-template-columns: 45% 55%; min-height: 300px; }
