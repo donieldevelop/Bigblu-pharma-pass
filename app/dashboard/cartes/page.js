@@ -77,6 +77,10 @@ export default function CartesAdminPage() {
                   {c.date_expiration ? ` · Expire le ${new Date(c.date_expiration).toLocaleDateString('fr-FR')}` : ''}
                 </p>
               </div>
+              <a href={`/dashboard/cartes/recto?id=${c.id}`}
+                style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #1a3a6b', color: '#1a3a6b', textDecoration: 'none', fontSize: 13.5 }}>
+                Recto à imprimer
+              </a>
               {c.statut === 'en_attente' && (
                 <button onClick={() => marquerDisponible(c.id)} disabled={busyId === c.id}
                   style={{ padding: '8px 14px', borderRadius: 6, border: 'none', background: '#1a3a6b', color: 'white', cursor: 'pointer' }}>
