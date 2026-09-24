@@ -1,10 +1,5 @@
 'use client';
 
-import { Poppins, Inter } from 'next/font/google';
-
-const poppins = Poppins({ subsets: ['latin'], weight: ['600', '700', '800'], variable: '--font-heading' });
-const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-body' });
-
 const FEATURES = [
   { icone: '/icons/plafond-mensuel.svg', titre: 'Un crédit mensuel', suite: 'dédié' },
   { icone: '/icons/utilisation-qr.svg', titre: 'Utilisation simple', suite: 'avec QR Code' },
@@ -22,7 +17,7 @@ const STEPS = [
 
 export default function Home() {
   return (
-    <div className={'page ' + poppins.variable + ' ' + inter.variable}>
+    <div className="page">
       <header className="site-header">
         <a className="brand" href="#accueil">
           <img src="/logo-complet.png" alt="BIGBLU AFRICA" />
@@ -122,7 +117,7 @@ export default function Home() {
 
       <style jsx>{`
         .page { margin: 0; font-family: var(--font-body), Arial, sans-serif; color: #092b70; background: #fff; }
-        .page :global(h1), .page :global(h2), .page :global(h3) { font-family: var(--font-heading), sans-serif; }
+        .page :global(h1), .page :global(h2), .page :global(h3) { font-family: var(--font-display), sans-serif; }
         .page :global(*) { box-sizing: border-box; }
         .page :global(img) { max-width: 100%; }
         .page :global(a) { text-decoration: none; }
@@ -162,7 +157,7 @@ export default function Home() {
         .steps-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
         .step { position: relative; text-align: left; display: flex; flex-direction: row; align-items: center; gap: 12px; background: linear-gradient(135deg, #fff, #f8f5ff); box-shadow: 0 6px 18px -8px rgba(76,29,149,.25); border: 1px solid #f0e9ff; border-radius: 20px; padding: 10px; }
         .step img { width: 62%; aspect-ratio: 4/3; height: auto; object-fit: cover; border-radius: 16px; display: block; flex-shrink: 0; }
-        .step h3 { font-size: 13px; line-height: 1.3; margin: 0; color: #082c72; flex: 1; font-weight: 700; }
+        .step h3 { font-size: 16px; line-height: 1.3; margin: 0; color: #082c72; flex: 1; font-weight: 700; }
 
         .pass-section { display: grid; grid-template-columns: 1.1fr 0.9fr; background: linear-gradient(120deg, #062e78 0%, #4c1d95 100%); border-radius: 28px; overflow: hidden; color: #fff; min-height: auto; align-items: stretch; }
         .pass-copy { padding: 18px 14px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
