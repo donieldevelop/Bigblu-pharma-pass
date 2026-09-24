@@ -90,7 +90,7 @@ export default function Home() {
             <p className="eyebrow">RÉSEAU PARTENAIRE</p>
             <h2>Un large réseau de pharmacies partenaires</h2>
             <p>Trouvez la pharmacie la plus proche de vous et profitez de vos services santé.</p>
-            <a className="btn btn-primary" href="/travailleur/login">Voir les pharmacies</a>
+            <a className="btn btn-primary" href="/pharmacies">Voir les pharmacies</a>
           </div>
           <div className="media-fade pharmacyImg">
             <img src="/v3-pharmacie.jpg" alt="Pharmacie partenaire BIGBLU" />
