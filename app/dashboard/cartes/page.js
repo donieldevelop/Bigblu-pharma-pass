@@ -50,7 +50,10 @@ export default function CartesAdminPage() {
     <div style={{ padding: 32 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h1 style={{ fontSize: 22 }}>File d&apos;impression des cartes</h1>
-        <a href="/dashboard" style={{ fontSize: 14, color: '#1a3a6b' }}>← Tableau de bord</a>
+        <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+          <a href="/dashboard/cartes/verso" style={{ fontSize: 14, color: '#1a3a6b' }}>Voir le verso →</a>
+          <a href="/dashboard" style={{ fontSize: 14, color: '#1a3a6b' }}>← Tableau de bord</a>
+        </div>
       </div>
       <p style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>
         La carte numérique du travailleur est déjà active dès sa demande. Cette page gère uniquement la logistique d&apos;impression et de remise de la carte physique.
