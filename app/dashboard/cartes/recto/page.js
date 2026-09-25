@@ -21,7 +21,7 @@ function RectoImprimable() {
       if (!id) { setErreur('Aucune carte sélectionnée.'); setLoading(false); return; }
       const { data, error } = await supabase
         .from('cartes_travailleur')
-        .select('id, travailleur_id, photo_url, matricule, utilisateurs(nom, prenom)')
+        .select('id, travailleur_id, photo_url, matricule, utilisateurs!travailleur_id(nom, prenom)')
         .eq('id', id)
         .maybeSingle();
       if (error) setErreur(error.message);

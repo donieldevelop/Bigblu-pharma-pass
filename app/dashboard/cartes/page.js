@@ -20,7 +20,7 @@ export default function CartesAdminPage() {
     if (!s.session) return router.push('/login');
     const { data, error } = await supabase
       .from('cartes_travailleur')
-      .select('id, entreprise, photo_url, matricule, statut, demandee_le, date_expiration, utilisateurs(nom, prenom, email)')
+      .select('id, entreprise, photo_url, matricule, statut, demandee_le, date_expiration, utilisateurs!travailleur_id(nom, prenom, email)')
       .order('demandee_le', { ascending: false });
     if (error) setError(error.message);
     setRows(data || []);
