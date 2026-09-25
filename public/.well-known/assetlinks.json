@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.bigblu.pharmapass",
+      "sha256_cert_fingerprints": [
+        "9C:ED:57:69:3F:A3:CF:94:11:71:FA:CA:FF:24:91:5A:45:39:FF:BD:D0:F4:F7:63:D0:3D:4E:6B:21:15:1E:87"
+      ]
+    }
+  }
+]
