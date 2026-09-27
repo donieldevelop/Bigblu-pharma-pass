@@ -36,7 +36,7 @@ function RectoImprimable() {
   return (
     <div className="ecran">
       <div className="barreOutils">
-        <a href="/dashboard/cartes" className="retour"><ArrowLeft size={18} /> Retour</a>
+        <a href="/dashboard/cartes" className="retour"><ArrowLeft size={16} /> Retour aux cartes</a>
         {carte && (
           <button onClick={() => window.print()} className="btnImprimer"><Printer size={15} /> Imprimer</button>
         )}
@@ -61,7 +61,7 @@ function RectoImprimable() {
       <style jsx>{`
         .ecran { background: #EEF2F6; min-height: 100vh; padding: 20px; }
         .barreOutils { max-width: 500px; margin: 0 auto 20px; display: flex; justify-content: space-between; align-items: center; }
-        .retour { display: inline-flex; align-items: center; gap: 6px; color: #5B6B82; text-decoration: none; font-size: 13px; }
+        .retour { display: inline-flex; align-items: center; gap: 6px; background: white; color: #12294D; border: 1px solid #12294D; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; }
         .btnImprimer { display: flex; align-items: center; gap: 6px; background: #12294D; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-size: 12.5px; cursor: pointer; }
         .apercu { max-width: 500px; margin: 0 auto; }
         .note { text-align: center; font-size: 12px; color: #5B6B82; margin-top: 14px; }
