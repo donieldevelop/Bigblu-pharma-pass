@@ -129,8 +129,30 @@ export default function ScannerPharmaciePage() {
     setPrix(s.prix_unitaire || '');
   }
 
+  // Credit disponible du travailleur et total en cours de la commande
+  const disponible = Number(infoTravailleur?.credit_disponible) || 0;
+  const totalCommande = medicaments.reduce((t, m) => t + (Number(m.quantite) || 0) * (Number(m.prix) || 0), 0);
+  const resteDisponible = disponible - totalCommande;
+  const ligneEnSaisie = (parseInt(quantite, 10) || 0) * (parseFloat(prix) || 0);
+  const depasseEnSaisie = ligneEnSaisie > 0 && ligneEnSaisie > resteDisponible;
+  const pourcentage = disponible > 0 ? Math.min(100, (totalCommande / disponible) * 100) : 100;
+  const couleurJauge = pourcentage >= 100 ? '#B8324D' : pourcentage >= 70 ? '#D97706' : '#0E7C3F';
+  const fcfa = (n) => Math.round(n).toLocaleString('fr-FR') + ' F';
+
   async function ajouterMedicament() {
     setError('');
+    const q = parseInt(quantite, 10);
+    const pu = parseFloat(prix);
+    if (!nom.trim()) return setError('Indique le nom du médicament.');
+    if (!q || q < 1) return setError('La quantité doit être au moins 1.');
+    if (!pu || pu <= 0) return setError('Indique le prix unitaire.');
+    // Blocage : la commande ne doit jamais depasser le credit disponible
+    if (q * pu > resteDisponible) {
+      return setError(
+        `Ce médicament (${fcfa(q * pu)}) dépasse le crédit disponible de ${fcfa(q * pu - resteDisponible)}. ` +
+        `Il reste ${fcfa(Math.max(0, resteDisponible))} : réduis la quantité, ou le travailleur paie ce médicament à part.`
+      );
+    }
     const { data, error } = await supabase.rpc('ajouter_medicament', {
       p_transaction_id: transactionId,
       p_nom: nom,
@@ -232,6 +254,19 @@ export default function ScannerPharmaciePage() {
           <div className="carte">
             <h3>2. Ajouter les médicaments</h3>
 
+            <div className="jauge">
+              <div className="jaugeLigne">
+                <span>Total : <strong>{fcfa(totalCommande)}</strong></span>
+                <span>Disponible : <strong>{fcfa(disponible)}</strong></span>
+              </div>
+              <div className="jaugeFond">
+                <div className="jaugeBarre" style={{ width: `${pourcentage}%`, background: couleurJauge }} />
+              </div>
+              <p className="jaugeReste" style={{ color: couleurJauge }}>
+                {resteDisponible > 0 ? `Il reste ${fcfa(resteDisponible)} de crédit` : 'Crédit entièrement utilisé'}
+              </p>
+            </div>
+
             <label className="btnPhoto">
               📷 Prendre une photo (lecture automatique)
               <input type="file" accept="image/*" capture="environment" onChange={analyserPhoto} style={{ display: 'none' }} />
@@ -256,7 +291,12 @@ export default function ScannerPharmaciePage() {
               <input type="number" placeholder="Qté" value={quantite} onChange={(e) => setQuantite(e.target.value)} className="input flex1" />
               <input type="number" placeholder="Prix unit." value={prix} onChange={(e) => setPrix(e.target.value)} className="input flex1" />
             </div>
-            <button onClick={ajouterMedicament} className="btnPrincipal">Ajouter</button>
+            {depasseEnSaisie && (
+              <p className="alerteSaisie">
+                ⚠ {fcfa(ligneEnSaisie)} : dépasse le crédit restant de {fcfa(ligneEnSaisie - resteDisponible)}
+              </p>
+            )}
+            <button onClick={ajouterMedicament} className="btnPrincipal" disabled={depasseEnSaisie}>Ajouter</button>
 
             {medicaments.length > 0 && (
               <ul className="listeMeds">
@@ -292,7 +332,9 @@ export default function ScannerPharmaciePage() {
                 <p>Reçu : {resultatValidation.reference}</p>
               </>
             ) : (
-              <h3 className="titreErreur">Refusée : {resultatValidation.raison}</h3>
+              <h3 className="titreErreur">
+                Refusée : {resultatValidation.raison === 'credit_insuffisant' ? 'crédit insuffisant' : resultatValidation.raison}
+              </h3>
             )}
             <button onClick={nouvelleOperation} className="btnPrincipal">Nouvelle opération</button>
           </div>
@@ -331,6 +373,13 @@ export default function ScannerPharmaciePage() {
         .checkMoment { margin-right: 12px; font-size: 13px; }
         .btnValider { width: 100%; margin-top: 12px; padding: 12px; border-radius: 8px; border: none; background: #0E7C3F; color: white; font-weight: 600; cursor: pointer; }
         .titreSucces { color: #0E7C3F; }
+        .jauge { background: #F5F9FD; border-radius: 10px; padding: 12px; margin-bottom: 14px; }
+        .jaugeLigne { display: flex; justify-content: space-between; font-size: 13px; color: #12294D; margin-bottom: 8px; }
+        .jaugeFond { height: 8px; background: #E4E9F0; border-radius: 4px; overflow: hidden; }
+        .jaugeBarre { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
+        .jaugeReste { font-size: 12px; font-weight: 600; margin: 6px 0 0; }
+        .alerteSaisie { font-size: 12.5px; color: #B8324D; font-weight: 600; margin: 0 0 8px; }
+        .btnPrincipal:disabled { opacity: 0.4; cursor: not-allowed; }
         .titreErreur { color: #B8324D; }
       `}</style>
     </div>
