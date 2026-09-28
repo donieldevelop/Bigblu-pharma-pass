@@ -1,3 +1,5 @@
+import { appelerGemini } from '../../../lib/gemini';
+
 // POST /api/analyser-medicament
 // Reçoit { image_base64 } et retourne les informations extraites par Gemini
 // (noms, présentations, quantités, prix visibles) sous forme de liste structurée.
@@ -13,7 +15,7 @@ export async function POST(request) {
     );
   }
 
-  const { image_base64 } = await request.json();
+  const { image_base64, mime_type } = await request.json();
   if (!image_base64) {
     return Response.json({ erreur: 'image_base64 manquante' }, { status: 400 });
   }
@@ -23,31 +25,22 @@ Retourne UNIQUEMENT un JSON valide, sans texte autour, sous la forme :
 {"medicaments": [{"nom": "...", "presentation": "...", "quantite": 1, "prix_unitaire": 0}]}
 Si une information n'est pas lisible, mets null. Ne jamais inventer un prix ou un nom absent de l'image.`;
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              { inline_data: { mime_type: 'image/jpeg', data: image_base64 } },
-            ],
-          },
+  const r = await appelerGemini(apiKey, {
+    contents: [
+      {
+        parts: [
+          { text: prompt },
+          { inline_data: { mime_type: mime_type || 'image/jpeg', data: image_base64 } },
         ],
-      }),
-    }
-  );
+      },
+    ],
+    generationConfig: { responseMimeType: 'application/json', temperature: 0.1 },
+  });
 
-  if (!response.ok) {
-    const detail = await response.text();
-    return Response.json({ erreur: 'Erreur Gemini', detail }, { status: 502 });
+  if (!r.ok) {
+    return Response.json({ erreur: r.erreur, detail: r.detail }, { status: 502 });
   }
-
-  const data = await response.json();
-  const texte = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  const texte = r.texte || '{}';
 
   let resultat;
   try {

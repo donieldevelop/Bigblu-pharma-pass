@@ -1,3 +1,4 @@
+import { appelerGemini } from '../../../lib/gemini';
 import { createClient } from '@supabase/supabase-js';
 
 // POST /api/assistant
@@ -55,22 +56,12 @@ ${contexte}
 
 Question du travailleur : ${message}`;
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] }),
-    }
-  );
+  const r = await appelerGemini(apiKey, { contents: [{ parts: [{ text: systemPrompt }] }] });
 
-  if (!response.ok) {
-    const detail = await response.text();
-    return Response.json({ erreur: 'Erreur Gemini', detail }, { status: 502 });
+  if (!r.ok) {
+    return Response.json({ erreur: r.erreur, detail: r.detail }, { status: 502 });
   }
-
-  const data = await response.json();
-  const texte = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Je n'ai pas pu répondre, réessaie.";
+  const texte = r.texte || "Je n'ai pas pu répondre, réessaie.";
 
   return Response.json({ reponse: texte });
 }

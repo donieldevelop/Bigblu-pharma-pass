@@ -93,28 +93,33 @@ export default function ScannerPharmaciePage() {
     setError('');
     setSuggestionsIA([]);
 
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
     try {
+      // Reduit la photo (max 1280 px, JPEG) : une photo de telephone brute
+      // depasse la limite d'envoi du serveur (4,5 Mo) et fait echouer l'analyse.
+      const base64 = await compresserImage(file, 1280, 0.85);
       const res = await fetch('/api/analyser-medicament', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image_base64: base64 }),
+        body: JSON.stringify({ image_base64: base64, mime_type: 'image/jpeg' }),
       });
-      const data = await res.json();
+      const brut = await res.text();
+      let data;
+      try {
+        data = JSON.parse(brut);
+      } catch {
+        data = { erreur: res.status === 413 ? 'Photo trop lourde, reprends-la de plus près.' : `Le serveur a répondu une erreur (code ${res.status}).` };
+      }
       if (data.erreur) {
         setError(data.erreur);
+      } else if (!data.medicaments?.length) {
+        setError("Aucun médicament lisible sur la photo. Reprends-la plus nette, ou saisis-le à la main.");
       } else {
-        setSuggestionsIA(data.medicaments || []);
+        setSuggestionsIA(data.medicaments);
       }
     } catch (err) {
       setError("Erreur d'analyse : " + err.message);
     }
+    e.target.value = '';
     setPhotoEnAnalyse(false);
   }
 
@@ -330,4 +335,25 @@ export default function ScannerPharmaciePage() {
       `}</style>
     </div>
   );
+}
+
+// Redimensionne et compresse une photo avant envoi (renvoie le base64 JPEG sans prefixe)
+function compresserImage(file, maxCote, qualite) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const ratio = Math.min(1, maxCote / Math.max(img.width, img.height));
+      const w = Math.round(img.width * ratio);
+      const h = Math.round(img.height * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL('image/jpeg', qualite).split(',')[1]);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image illisible')); };
+    img.src = url;
+  });
 }
