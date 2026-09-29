@@ -1,6 +1,29 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import QrCodeCanvas from './QrCodeCanvas';
+
+// Ajuste la taille du texte pour qu'il tienne EN ENTIER dans sa zone,
+// en mesurant le rendu reel (la police varie selon le telephone).
+// 1) une ligne, de 4.6cqw jusqu'a 3.0cqw ; 2) sinon deux lignes, de 2.9cqw jusqu'a 1.8cqw.
+function ajusterTexte(el, deuxLignesPermises) {
+  if (!el) return;
+  el.classList.remove('deuxLignes');
+  let taille = 4.6;
+  el.style.fontSize = taille + 'cqw';
+  while (el.scrollWidth > el.clientWidth + 1 && taille > 3.0) {
+    taille -= 0.1;
+    el.style.fontSize = taille.toFixed(1) + 'cqw';
+  }
+  if (el.scrollWidth <= el.clientWidth + 1 || !deuxLignesPermises) return;
+  el.classList.add('deuxLignes');
+  taille = 2.9;
+  el.style.fontSize = taille + 'cqw';
+  while (el.scrollHeight > el.clientHeight + 1 && taille > 1.8) {
+    taille -= 0.1;
+    el.style.fontSize = taille.toFixed(1) + 'cqw';
+  }
+}
 
 // Recto de la carte BIGBLU PHARMA PASS.
 // Le design (vagues, logo, slogan, bandeau du bas, badge TRAVAILLEUR) est
@@ -12,11 +35,21 @@ import QrCodeCanvas from './QrCodeCanvas';
 export default function CarteRecto({ photoUrl, nomComplet, matricule, qrValue, largeur = '100%' }) {
   const nom = (nomComplet || '').trim().toUpperCase();
   const mat = (matricule || '').trim();
-  // Reduit automatiquement la taille du texte si le nom est long
-  // Nom long (plus de 16 caracteres) : passe sur 2 lignes au lieu d'etre coupe
-  const nomLong = nom.length > 16;
-  const tailleNom = nomLong ? 2.7 : Math.min(4.6, 60 / Math.max(nom.length, 1));
-  const tailleMat = Math.min(4.6, 58 / Math.max(mat.length, 1));
+  const nomRef = useRef(null);
+  const matRef = useRef(null);
+
+  useEffect(() => {
+    const ajuster = () => {
+      ajusterTexte(nomRef.current, true);
+      ajusterTexte(matRef.current, false);
+    };
+    ajuster();
+    // Re-mesure quand les polices sont chargees et si la carte change de taille
+    if (document.fonts?.ready) document.fonts.ready.then(ajuster);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(ajuster) : null;
+    if (ro && nomRef.current) ro.observe(nomRef.current.parentElement);
+    return () => ro && ro.disconnect();
+  }, [nom, mat]);
 
   return (
     <div className="carte" style={{ width: largeur }}>
@@ -24,8 +57,8 @@ export default function CarteRecto({ photoUrl, nomComplet, matricule, qrValue, l
         {photoUrl && <img src={photoUrl} alt="" />}
       </div>
 
-      <div className={nomLong ? 'nom nomLong' : 'nom'} style={{ fontSize: `${tailleNom}cqw` }}>{nom}</div>
-      <div className="matricule" style={{ fontSize: `${tailleMat}cqw` }}>{mat}</div>
+      <div ref={nomRef} className="nom">{nom}</div>
+      <div ref={matRef} className="matricule">{mat}</div>
 
       <div className="qr">
         {qrValue && <QrCodeCanvas value={qrValue} size={320} />}
@@ -62,16 +95,17 @@ export default function CarteRecto({ photoUrl, nomComplet, matricule, qrValue, l
           line-height: 1;
           white-space: nowrap;
           overflow: hidden;
-          text-overflow: ellipsis;
+          text-overflow: clip;
           letter-spacing: -0.01em;
         }
         .nom { top: 39.3%; }
-        .nomLong {
+        .nom.deuxLignes {
           white-space: normal;
           line-height: 1.05;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
+          height: 2.2em;
+          display: flex;
+          align-items: center;
+          text-overflow: clip;
           top: 39.6%;
         }
         .matricule { top: 56.1%; }
